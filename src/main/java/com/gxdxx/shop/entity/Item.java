@@ -34,8 +34,4 @@ public class Item extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus;  //상품 판매 상태
 
-    private LocalDateTime registerTime; //등록 시간
-
-    private LocalDateTime updateTime;   //수정 시간
-
 }
