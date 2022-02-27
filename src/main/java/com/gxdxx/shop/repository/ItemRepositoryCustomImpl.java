@@ -2,8 +2,11 @@ package com.gxdxx.shop.repository;
 
 import com.gxdxx.shop.constant.ItemSellStatus;
 import com.gxdxx.shop.dto.ItemSearchDto;
+import com.gxdxx.shop.dto.MainItemDto;
+import com.gxdxx.shop.dto.QMainItemDto;
 import com.gxdxx.shop.entity.Item;
 import com.gxdxx.shop.entity.QItem;
+import com.gxdxx.shop.entity.QItemImg;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
@@ -65,6 +68,29 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                         searchByLike(itemSearchDto.getSearchBy(),
                                 itemSearchDto.getSearchQuery()))
                 .orderBy(QItem.item.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return new PageImpl<>(content, pageable, content.size());
+    }
+
+    private BooleanExpression itemNameLike(String searchQuery) {
+        return StringUtils.isEmpty(searchQuery) ? null : QItem.item.itemName.like("%" + searchQuery + "%");
+    }
+
+    @Override
+    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+        QItem item = QItem.item;
+        QItemImg itemImg = QItemImg.itemImg;
+
+        List<MainItemDto> content = queryFactory.select(new QMainItemDto(item.id, item.itemName, item.itemDescription, itemImg.imgUrl, item.price)
+        )
+                .from(itemImg)
+                .join(itemImg.item, item)
+                .where(itemImg.repImgYn.eq("Y"))
+                .where(itemNameLike(itemSearchDto.getSearchQuery()))
+                .orderBy(item.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
