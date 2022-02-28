@@ -2,6 +2,7 @@ package com.gxdxx.shop.entity;
 
 import com.gxdxx.shop.constant.ItemSellStatus;
 import com.gxdxx.shop.dto.ItemFormDto;
+import com.gxdxx.shop.exception.OutOfStockException;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -41,6 +42,14 @@ public class Item extends BaseEntity {
         this.stockQuantity = itemFormDto.getStockQuantity();
         this.itemDescription = itemFormDto.getItemDescription();
         this.itemSellStatus = itemFormDto.getItemSellStatus();
+    }
+
+    public void removeStock(int stockQuantity) {
+        int restStock = this.stockQuantity - stockQuantity;
+        if (restStock < 0) {
+            throw new OutOfStockException("상품의 재고가 부족합니다. (현재 재고 수량: " + this.stockQuantity + ")");
+        }
+        this.stockQuantity = restStock;
     }
 
 }
