@@ -2,6 +2,8 @@ package com.gxdxx.shop.service;
 
 import com.gxdxx.shop.dto.CartDetailDto;
 import com.gxdxx.shop.dto.CartItemDto;
+import com.gxdxx.shop.dto.CartOrderDto;
+import com.gxdxx.shop.dto.OrderDto;
 import com.gxdxx.shop.entity.Cart;
 import com.gxdxx.shop.entity.CartItem;
 import com.gxdxx.shop.entity.Item;
@@ -27,7 +29,8 @@ public class CartService {
     private final ItemRepository itemRepository;
     private final MemberRepository memberRepository;
     private final CartRepository cartRepository;
-    private CartItemRepository cartItemRepository;
+    private final CartItemRepository cartItemRepository;
+    private final OrderService orderService;
 
     public Long addCart(CartItemDto cartItemDto,String email) {
         Item item = itemRepository.findById(cartItemDto.getItemId()).orElseThrow(EntityNotFoundException::new);
@@ -88,6 +91,31 @@ public class CartService {
     public void deleteCartItem(Long cartItemId) {
         CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(EntityNotFoundException::new);
         cartItemRepository.delete(cartItem);
+    }
+
+    public Long orderCartItem(List<CartOrderDto> cartOrderDtoList, String email) {
+        List<OrderDto> orderDtoList = new ArrayList<>();
+        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
+            CartItem cartItem = cartItemRepository
+                    .findById(cartOrderDto.getCartItemId())
+                    .orElseThrow(EntityNotFoundException::new);
+
+            OrderDto orderDto = new OrderDto();
+            orderDto.setItemId(cartItem.getItem().getId());
+            orderDto.setCount(cartItem.getCount());
+            orderDtoList.add(orderDto);
+        }
+
+        Long orderId = orderService.orders(orderDtoList, email);
+
+        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
+            CartItem cartItem = cartItemRepository
+                    .findById(cartOrderDto.getCartItemId())
+                    .orElseThrow(EntityNotFoundException::new);
+            cartItemRepository.delete(cartItem);
+        }
+
+        return orderId;
     }
 
 }
