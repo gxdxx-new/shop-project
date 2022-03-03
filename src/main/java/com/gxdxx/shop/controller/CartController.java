@@ -56,6 +56,7 @@ public class CartController {
         return "cart/cartList";
     }
 
+    @PatchMapping(value = "/cartItem/{cartItemId}")
     public @ResponseBody ResponseEntity updateCartItem(
             @PathVariable("cartItemId") Long cartItemId, int count, Principal principal) {
 
