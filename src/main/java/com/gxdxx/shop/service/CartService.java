@@ -1,5 +1,6 @@
 package com.gxdxx.shop.service;
 
+import com.gxdxx.shop.dto.CartDetailDto;
 import com.gxdxx.shop.dto.CartItemDto;
 import com.gxdxx.shop.entity.Cart;
 import com.gxdxx.shop.entity.CartItem;
@@ -12,8 +13,11 @@ import com.gxdxx.shop.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +48,22 @@ public class CartService {
         CartItem cartItem = CartItem.createCartItem(cart, item, cartItemDto.getCount());
         cartItemRepository.save(cartItem);
         return cartItem.getId();
+    }
+
+    @Transactional(readOnly = true)
+    public List<CartDetailDto> getCartList(String email) {
+
+        List<CartDetailDto> cartDetailDtoList = new ArrayList<>();
+
+        Member member = memberRepository.findByEmail(email);
+        Cart cart = cartRepository.findByMemberId(member.getId());
+        if (cart == null) {
+            return cartDetailDtoList;
+        }
+
+        cartDetailDtoList = cartItemRepository.findCartDetailDtoList(cart.getId());
+
+        return cartDetailDtoList;
     }
 
 }
