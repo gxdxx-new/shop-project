@@ -59,6 +59,17 @@ public class BoardController {
         return "redirect:/";
     }
 
+    @GetMapping(value = "/board/{boardId}")
+    public String boardDtl(Model model, @PathVariable("boardId") Long boardId) {
+
+        BoardFormDto boardFormDto = boardService.getBoardDtl(boardId);
+        Member member = boardService.getBoardMember(boardId);
+
+        model.addAttribute("board", boardFormDto);
+        model.addAttribute("member", member.getEmail());
+        return "board/boardDtl";
+    }
+
     @GetMapping(value = {"/boards", "/boards/{page}"})
     public String boardList(BoardSearchDto boardSearchDto, @PathVariable("page") Optional<Integer> page, Model model) {
 

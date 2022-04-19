@@ -40,6 +40,27 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
+    public BoardFormDto getBoardDtl(Long boardId) {
+
+        Board board = boardRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
+        BoardFormDto boardFormDto = new BoardFormDto();
+        boardFormDto.setId(board.getId());
+        boardFormDto.setBoardTitle(board.getBoardTitle());
+        boardFormDto.setBoardContent(board.getBoardContent());
+
+        return boardFormDto;
+    }
+
+    @Transactional(readOnly = true)
+    public Member getBoardMember(Long boardId) {
+
+        Board board = boardRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
+        Member member = board.getMember();
+
+        return member;
+    }
+
+    @Transactional(readOnly = true)
     public Page<Board> getBoardPage(BoardSearchDto boardSearchDto, Pageable pageable) {
         return boardRepository.getBoardPage(boardSearchDto, pageable);
     }
