@@ -56,7 +56,7 @@ public class BoardController {
             return "board/boardForm";
         }
 
-        return "redirect:/";
+        return "redirect:/boards";
     }
 
     @GetMapping(value = "/board/{boardId}")
