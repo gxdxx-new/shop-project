@@ -15,14 +15,11 @@
         });
 
         function page(page){
-            var searchDateType = $("#searchDateType").val();
-            var searchSellStatus = $("#searchSellStatus").val();
             var searchBy = $("#searchBy").val();
             var searchQuery = $("#searchQuery").val();
 
-            location.href="/admin/items/" + page + "?searchDateType=" + searchDateType
-            + "&searchSellStatus=" + searchSellStatus
-            + "&searchBy=" + searchBy
+            location.href="/boards/" + page
+            + "?searchBy=" + searchBy
             + "&searchQuery=" + searchQuery;
         }
 

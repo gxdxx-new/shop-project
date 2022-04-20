@@ -1,20 +1,17 @@
 package com.gxdxx.shop.repository;
 
-import com.gxdxx.shop.constant.ItemSellStatus;
 import com.gxdxx.shop.dto.BoardSearchDto;
-import com.gxdxx.shop.dto.ItemSearchDto;
-import com.gxdxx.shop.dto.MainItemDto;
-import com.gxdxx.shop.dto.QMainItemDto;
 import com.gxdxx.shop.entity.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
@@ -46,7 +43,11 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return new PageImpl<>(content, pageable, content.size());
+        JPAQuery<Board> countQuery = queryFactory.selectFrom(QBoard.board)
+                .where(searchByLike(boardSearchDto.getSearchBy(),
+                                boardSearchDto.getSearchQuery()));
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
     private BooleanExpression boardNameLike(String searchQuery) {

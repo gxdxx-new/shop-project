@@ -73,7 +73,7 @@ public class BoardController {
     @GetMapping(value = {"/boards", "/boards/{page}"})
     public String boardList(BoardSearchDto boardSearchDto, @PathVariable("page") Optional<Integer> page, Model model) {
 
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 3);
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 10);
 
         Page<Board> boards = boardService.getBoardPage(boardSearchDto, pageable);
 
