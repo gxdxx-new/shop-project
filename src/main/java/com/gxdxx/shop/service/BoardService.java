@@ -1,10 +1,7 @@
 package com.gxdxx.shop.service;
 
 import com.gxdxx.shop.dto.*;
-import com.gxdxx.shop.entity.Board;
-import com.gxdxx.shop.entity.Item;
-import com.gxdxx.shop.entity.ItemImg;
-import com.gxdxx.shop.entity.Member;
+import com.gxdxx.shop.entity.*;
 import com.gxdxx.shop.repository.BoardRepository;
 import com.gxdxx.shop.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
@@ -58,6 +56,24 @@ public class BoardService {
         Member member = board.getMember();
 
         return member;
+    }
+
+    @Transactional(readOnly = true)
+    public boolean validateBoard(Long boardId, String email) {
+        Member currentMember = memberRepository.findByEmail(email);
+        Board board = boardRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
+        Member savedMember = board.getMember();
+
+        if (!StringUtils.equals(currentMember.getEmail(), savedMember.getEmail())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public void deleteBoard(Long boardId) {
+        Board board = boardRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
+        boardRepository.delete(board);
     }
 
     @Transactional(readOnly = true)

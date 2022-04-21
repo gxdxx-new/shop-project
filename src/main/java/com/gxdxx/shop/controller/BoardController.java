@@ -12,13 +12,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
@@ -68,6 +67,18 @@ public class BoardController {
         model.addAttribute("board", boardFormDto);
         model.addAttribute("member", member.getEmail());
         return "board/boardDtl";
+    }
+
+    @DeleteMapping(value = "/board/{boardId}")
+    public @ResponseBody ResponseEntity deleteBoard(
+            @PathVariable("boardId") Long boardId, Principal principal) {
+
+        if (!boardService.validateBoard(boardId, principal.getName())) {
+            return new ResponseEntity<String>("삭제 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        }
+
+        boardService.deleteBoard(boardId);
+        return new ResponseEntity<Long>(boardId, HttpStatus.OK);
     }
 
     @GetMapping(value = {"/boards", "/boards/{page}"})
