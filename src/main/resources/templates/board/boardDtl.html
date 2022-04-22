@@ -77,7 +77,8 @@
             <div class="h4" th:text="${board.boardTitle}"></div>
             <hr class="my-4">
 
-            <div class="h4" th:text="'작성자: ' + ${member}"></div>
+            <div class="h4" th:text="'작성자: ' + ${board.createdBy}"></div>
+            <div class="h4" th:text="'등록일: ' + ${board.registerTime}"></div>
             <hr class="my-4">
 
             <div class="jumbotron jumbotron-fluid mgt-30">

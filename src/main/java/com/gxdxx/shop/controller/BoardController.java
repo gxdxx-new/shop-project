@@ -1,12 +1,7 @@
 package com.gxdxx.shop.controller;
 
-import com.gxdxx.shop.dto.BoardFormDto;
-import com.gxdxx.shop.dto.BoardSearchDto;
-import com.gxdxx.shop.dto.ItemFormDto;
-import com.gxdxx.shop.dto.ItemSearchDto;
+import com.gxdxx.shop.dto.*;
 import com.gxdxx.shop.entity.Board;
-import com.gxdxx.shop.entity.Item;
-import com.gxdxx.shop.entity.Member;
 import com.gxdxx.shop.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,12 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -67,7 +60,7 @@ public class BoardController {
         }
 
         try {
-            BoardFormDto boardFormDto = boardService.getBoardDtl(boardId);
+            BoardFormDto boardFormDto = boardService.getBoardForm(boardId);
             model.addAttribute("boardFormDto", boardFormDto);
         } catch (EntityNotFoundException e) {
             model.addAttribute("errorMessage", "존재하지 않는 게시글입니다.");
@@ -98,11 +91,9 @@ public class BoardController {
     @GetMapping(value = "/board/{boardId}") // 글 보기
     public String boardDtl(Model model, @PathVariable("boardId") Long boardId) {
 
-        BoardFormDto boardFormDto = boardService.getBoardDtl(boardId);
-        Member member = boardService.getBoardMember(boardId);
+        BoardDetailDto boardDetailDto = boardService.getBoardDetail(boardId);
 
-        model.addAttribute("board", boardFormDto);
-        model.addAttribute("member", member.getEmail());
+        model.addAttribute("board", boardDetailDto);
         return "board/boardDtl";
     }
 

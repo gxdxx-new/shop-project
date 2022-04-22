@@ -9,12 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.gxdxx.shop.entity.Board.createBoard;
 
@@ -38,7 +35,7 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public BoardFormDto getBoardDtl(Long boardId) {
+    public BoardFormDto getBoardForm(Long boardId) {
 
         Board board = boardRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
         BoardFormDto boardFormDto = new BoardFormDto();
@@ -47,6 +44,19 @@ public class BoardService {
         boardFormDto.setBoardContent(board.getBoardContent());
 
         return boardFormDto;
+    }
+    @Transactional(readOnly = true)
+    public BoardDetailDto getBoardDetail(Long boardId) {
+
+        Board board = boardRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
+        BoardDetailDto boardDetailDto = new BoardDetailDto();
+        boardDetailDto.setId(board.getId());
+        boardDetailDto.setBoardTitle(board.getBoardTitle());
+        boardDetailDto.setBoardContent(board.getBoardContent());
+        boardDetailDto.setCreatedBy(board.getCreatedBy());
+        boardDetailDto.setRegisterTime(board.getRegisterTime());
+
+        return boardDetailDto;
     }
 
     @Transactional(readOnly = true)
