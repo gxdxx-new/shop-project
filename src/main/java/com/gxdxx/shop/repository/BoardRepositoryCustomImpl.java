@@ -1,6 +1,8 @@
 package com.gxdxx.shop.repository;
 
+import com.gxdxx.shop.dto.BoardListDto;
 import com.gxdxx.shop.dto.BoardSearchDto;
+import com.gxdxx.shop.dto.QBoardListDto;
 import com.gxdxx.shop.entity.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -34,18 +36,20 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
     }
 
     @Override
-    public Page<Board> getBoardPage(BoardSearchDto boardSearchDto, Pageable pageable) {
-        List<Board> content = queryFactory.selectFrom(QBoard.board)
+    public Page<BoardListDto> getBoardPage(BoardSearchDto boardSearchDto, Pageable pageable) {
+        QBoard board = QBoard.board;
+        List<BoardListDto> content = queryFactory.select(new QBoardListDto(board.id, board.boardTitle, board.createdBy, board.registerTime))
+                .from(board)
                 .where(searchByLike(boardSearchDto.getSearchBy(),
-                                boardSearchDto.getSearchQuery()))
-                .orderBy(QBoard.board.id.desc())
+                        boardSearchDto.getSearchQuery()))
+                .orderBy(board.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Board> countQuery = queryFactory.selectFrom(QBoard.board)
+        JPAQuery<Board> countQuery = queryFactory.selectFrom(board)
                 .where(searchByLike(boardSearchDto.getSearchBy(),
-                                boardSearchDto.getSearchQuery()));
+                        boardSearchDto.getSearchQuery()));
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }

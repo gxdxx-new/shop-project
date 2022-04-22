@@ -96,7 +96,7 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Board> getBoardPage(BoardSearchDto boardSearchDto, Pageable pageable) {
+    public Page<BoardListDto> getBoardPage(BoardSearchDto boardSearchDto, Pageable pageable) {
         return boardRepository.getBoardPage(boardSearchDto, pageable);
     }
 

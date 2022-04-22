@@ -114,7 +114,7 @@ public class BoardController {
 
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 10);
 
-        Page<Board> boards = boardService.getBoardPage(boardSearchDto, pageable);
+        Page<BoardListDto> boards = boardService.getBoardPage(boardSearchDto, pageable);
 
         model.addAttribute("boards", boards);
         model.addAttribute("boardSearchDto", boardSearchDto);
