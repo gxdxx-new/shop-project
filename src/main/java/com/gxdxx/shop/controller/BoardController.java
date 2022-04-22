@@ -20,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
@@ -58,7 +59,43 @@ public class BoardController {
         return "redirect:/boards";
     }
 
-    @GetMapping(value = "/board/{boardId}")
+    @GetMapping(value = "/board/{boardId}/edit")    // 글 수정 페이지
+    public String boardEdit(@PathVariable("boardId") Long boardId, Principal principal, Model model) {
+
+        if (!boardService.validateBoard(boardId, principal.getName())) {
+            return "redirect:/boards";
+        }
+
+        try {
+            BoardFormDto boardFormDto = boardService.getBoardDtl(boardId);
+            model.addAttribute("boardFormDto", boardFormDto);
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("errorMessage", "존재하지 않는 게시글입니다.");
+            model.addAttribute("boardFormDto", new BoardFormDto());
+            return "board/boardForm";
+        }
+
+        return "board/boardForm";
+    }
+
+    @PostMapping(value = "/board/{boardId}")    // 글 수정
+    public String boardUpdate(@Valid BoardFormDto boardFormDto, BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            return "board/boardForm";
+        }
+
+        try {
+            boardService.updateBoard(boardFormDto);
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "게시글 수정 중 에러가 발생했습니다.");
+            return "board/boardForm";
+        }
+
+        return "redirect:/board/{boardId}";
+    }
+
+    @GetMapping(value = "/board/{boardId}") // 글 보기
     public String boardDtl(Model model, @PathVariable("boardId") Long boardId) {
 
         BoardFormDto boardFormDto = boardService.getBoardDtl(boardId);
@@ -69,7 +106,7 @@ public class BoardController {
         return "board/boardDtl";
     }
 
-    @DeleteMapping(value = "/board/{boardId}")
+    @DeleteMapping(value = "/board/{boardId}")  // 글 삭제
     public @ResponseBody ResponseEntity deleteBoard(
             @PathVariable("boardId") Long boardId, Principal principal) {
 

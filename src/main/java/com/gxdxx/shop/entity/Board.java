@@ -38,4 +38,9 @@ public class Board extends BaseEntity {
         return board;
     }
 
+    public void updateBoard(BoardFormDto boardFormDto) {
+        this.boardTitle = boardFormDto.getBoardTitle();
+        this.boardContent = boardFormDto.getBoardContent();
+    }
+
 }

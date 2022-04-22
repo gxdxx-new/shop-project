@@ -71,6 +71,15 @@ public class BoardService {
         return true;
     }
 
+    public Long updateBoard(BoardFormDto boardFormDto) throws Exception {
+
+        //상품 수정
+        Board board = boardRepository.findById(boardFormDto.getId()).orElseThrow(EntityNotFoundException::new);
+        board.updateBoard(boardFormDto);
+
+        return board.getId();
+    }
+
     public void deleteBoard(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
         boardRepository.delete(board);

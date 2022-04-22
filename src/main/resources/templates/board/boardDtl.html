@@ -87,6 +87,7 @@
                     <p class="lead" th:text="${board.boardContent}"></p>
                 </div>
             </div>
+            <a th:href="'/board/'+${board.id}+'/edit'" class="btn btn-primary">수정</a>
             <button type="button" class="btn btn-primary" aria-label="Close">
                 <span aria-hidden="true" th:data-id="${board.id}" onclick="deleteBoard(this)">삭제</span>
             </button>
