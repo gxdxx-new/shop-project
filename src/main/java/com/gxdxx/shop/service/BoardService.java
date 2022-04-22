@@ -45,6 +45,7 @@ public class BoardService {
 
         return boardFormDto;
     }
+
     @Transactional(readOnly = true)
     public BoardDetailDto getBoardDetail(Long boardId) {
 
@@ -53,19 +54,18 @@ public class BoardService {
         boardDetailDto.setId(board.getId());
         boardDetailDto.setBoardTitle(board.getBoardTitle());
         boardDetailDto.setBoardContent(board.getBoardContent());
+        boardDetailDto.setHits(board.getHits());
         boardDetailDto.setCreatedBy(board.getCreatedBy());
         boardDetailDto.setRegisterTime(board.getRegisterTime());
 
         return boardDetailDto;
     }
 
-    @Transactional(readOnly = true)
-    public Member getBoardMember(Long boardId) {
-
+    public void hitsCount(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
-        Member member = board.getMember();
 
-        return member;
+        board.setHits(board.getHits() + 1);
+
     }
 
     @Transactional(readOnly = true)

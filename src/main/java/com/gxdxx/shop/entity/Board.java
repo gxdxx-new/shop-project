@@ -26,6 +26,9 @@ public class Board extends BaseEntity {
     @Column(nullable = false)
     private String boardContent; //글내용
 
+    @Column(nullable = false)
+    private long hits;  //조회수
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -34,6 +37,7 @@ public class Board extends BaseEntity {
         Board board = new Board();
         board.boardTitle = boardFormDto.getBoardTitle();
         board.boardContent = boardFormDto.getBoardContent();
+        board.hits = 0;
         board.setMember(member);
         return board;
     }

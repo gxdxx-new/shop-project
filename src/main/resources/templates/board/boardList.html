@@ -49,6 +49,7 @@
             <tr>
                 <td>글번호</td>
                 <td>제목</td>
+                <td>조회수</td>
                 <td>작성자</td>
                 <td>등록일</td>
             </tr>
@@ -59,6 +60,7 @@
                 <td>
                     <a th:href="'/board/'+${board.id}" th:text="${board.boardTitle}"></a>
                 </td>
+                <td th:text="${board.hits}"></td>
                 <td th:text="${board.createdBy}"></td>
                 <td th:text="${board.registerTime}"></td>
             </tr>

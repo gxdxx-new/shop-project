@@ -15,6 +15,8 @@ public class BoardDetailDto {
 
     private String boardContent;
 
+    private long hits;
+
     private String createdBy;
 
     private LocalDateTime registerTime;

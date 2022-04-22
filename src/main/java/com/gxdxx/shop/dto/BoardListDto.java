@@ -14,14 +14,17 @@ public class BoardListDto {
 
     private String boardTitle;
 
+    private long hits;
+
     private String createdBy;
 
     private LocalDateTime registerTime;
 
     @QueryProjection
-    public BoardListDto(Long id, String boardTitle, String createdBy, LocalDateTime registerTime) {
+    public BoardListDto(Long id, String boardTitle, long hits, String createdBy, LocalDateTime registerTime) {
         this.id = id;
         this.boardTitle = boardTitle;
+        this.hits = hits;
         this.createdBy = createdBy;
         this.registerTime = registerTime;
     }

@@ -91,6 +91,8 @@ public class BoardController {
     @GetMapping(value = "/board/{boardId}") // 글 보기
     public String boardDtl(Model model, @PathVariable("boardId") Long boardId) {
 
+        boardService.hitsCount(boardId);
+
         BoardDetailDto boardDetailDto = boardService.getBoardDetail(boardId);
 
         model.addAttribute("board", boardDetailDto);
