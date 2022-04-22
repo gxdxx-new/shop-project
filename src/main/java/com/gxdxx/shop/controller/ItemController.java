@@ -1,6 +1,7 @@
 package com.gxdxx.shop.controller;
 
 import com.gxdxx.shop.dto.ItemFormDto;
+import com.gxdxx.shop.dto.ItemListDto;
 import com.gxdxx.shop.dto.ItemSearchDto;
 import com.gxdxx.shop.entity.Item;
 import com.gxdxx.shop.service.ItemService;
@@ -100,7 +101,7 @@ public class ItemController {
 
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 10);
 
-        Page<Item> items = itemService.getAdminItemPage(itemSearchDto, pageable);
+        Page<ItemListDto> items = itemService.getAdminItemPage(itemSearchDto, pageable);
 
         model.addAttribute("items", items);
         model.addAttribute("itemSearchDto", itemSearchDto);

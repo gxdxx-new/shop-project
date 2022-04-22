@@ -1,9 +1,6 @@
 package com.gxdxx.shop.service;
 
-import com.gxdxx.shop.dto.ItemFormDto;
-import com.gxdxx.shop.dto.ItemImgDto;
-import com.gxdxx.shop.dto.ItemSearchDto;
-import com.gxdxx.shop.dto.MainItemDto;
+import com.gxdxx.shop.dto.*;
 import com.gxdxx.shop.entity.Item;
 import com.gxdxx.shop.entity.ItemImg;
 import com.gxdxx.shop.repository.ItemImgRepository;
@@ -83,7 +80,7 @@ public class ItemService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+    public Page<ItemListDto> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
         return itemRepository.getAdminItemPage(itemSearchDto, pageable);
     }
 

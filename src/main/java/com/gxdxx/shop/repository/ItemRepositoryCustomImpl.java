@@ -1,9 +1,7 @@
 package com.gxdxx.shop.repository;
 
 import com.gxdxx.shop.constant.ItemSellStatus;
-import com.gxdxx.shop.dto.ItemSearchDto;
-import com.gxdxx.shop.dto.MainItemDto;
-import com.gxdxx.shop.dto.QMainItemDto;
+import com.gxdxx.shop.dto.*;
 import com.gxdxx.shop.entity.Item;
 import com.gxdxx.shop.entity.QItem;
 import com.gxdxx.shop.entity.QItemImg;
@@ -63,8 +61,10 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     }
 
     @Override
-    public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
-        List<Item> content = queryFactory.selectFrom(QItem.item)
+    public Page<ItemListDto> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+        QItem item = QItem.item;
+        List<ItemListDto> content = queryFactory.select(new QItemListDto(item.id, item.itemName, item.price, item.stockQuantity, item.itemSellStatus, item.createdBy, item.registerTime))
+                .from(item)
                 .where(regDtsAfter(itemSearchDto.getSearchDateType()),
                         searchSellStatusEq(itemSearchDto.getSearchSellStatus()),
                         searchByLike(itemSearchDto.getSearchBy(),
@@ -74,7 +74,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Item> countQuery = queryFactory.selectFrom(QItem.item)
+        JPAQuery<Item> countQuery = queryFactory.selectFrom(item)
                 .where(regDtsAfter(itemSearchDto.getSearchDateType()),
                         searchSellStatusEq(itemSearchDto.getSearchSellStatus()),
                         searchByLike(itemSearchDto.getSearchBy(),
