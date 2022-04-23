@@ -147,4 +147,16 @@ public class BoardController {
         return new ResponseEntity<Long>(boardId, HttpStatus.OK);
     }
 
+    @DeleteMapping(value = "/board/{boardId}/comment/{commentId}")  // 댓글 삭제
+    public @ResponseBody ResponseEntity deleteComment(
+            @PathVariable("boardId") Long boardId, @PathVariable("commentId") Long commentId, Principal principal) {
+
+        if (!boardService.validateComment(commentId, principal.getName())) {
+            return new ResponseEntity<String>("삭제 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        }
+
+        boardService.deleteComment(boardId, commentId);
+        return new ResponseEntity<Long>(boardId, HttpStatus.OK);
+    }
+
 }

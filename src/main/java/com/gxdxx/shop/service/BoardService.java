@@ -138,4 +138,33 @@ public class BoardService {
         return board.getComments().size();
     }
 
+    @Transactional(readOnly = true)
+    public boolean validateComment(Long commentId, String email) {
+        Member currentMember = memberRepository.findByEmail(email);
+        Comment comment = commentRepository.findById(commentId).orElseThrow(EntityNotFoundException::new);
+        Member savedMember = comment.getMember();
+
+        if (!StringUtils.equals(currentMember.getEmail(), savedMember.getEmail())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public void deleteComment(Long boardId, Long commentId) {
+        Board board = boardRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
+        Comment comment = commentRepository.findById(commentId).orElseThrow(EntityNotFoundException::new);
+
+        // 게시글에서도 삭제하고, 댓글에서도 삭제
+        for (Comment findComment : board.getComments()) {
+            if (findComment.getId() == comment.getId()) {
+                board.getComments().remove(findComment);
+                board.setCommentCount(board.getCommentCount() - 1);
+                break;
+            }
+        }
+
+        commentRepository.delete(comment);
+    }
+
 }
