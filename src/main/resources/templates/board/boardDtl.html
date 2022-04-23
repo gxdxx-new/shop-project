@@ -74,7 +74,7 @@
                 cache   : false,
                 success  : function(result, status){
                     alert("댓글 작성이 완료 되었습니다.");
-                    location.href='/';
+                    location.href='/board/' + [[${boardId}]];
                 },
                 error : function(jqXHR, status, error){
 
@@ -117,41 +117,50 @@
 
     <div class="container">
 
-    <div class="">
-        <div>
+        <div class="">
+            <div>
 
-            <div class="h4" th:text="${board.boardTitle}"></div>
-            <hr class="my-4">
+                <div class="h4" th:text="${board.boardTitle}"></div>
+                <hr class="my-4">
 
-            <table>
-                <td th:text="'작성자: ' + ${board.createdBy}"></td>
-                <td th:text="' | 등록일: ' + ${board.registerTime}"></td>
-                <td th:text="' | 조회수: ' + ${board.hits}"></td>
-            </table>
+                <table>
+                    <td th:text="'작성자: ' + ${board.createdBy}"></td>
+                    <td th:text="' | 등록일: ' + ${board.registerTime}"></td>
+                    <td th:text="' | 조회수: ' + ${board.hits}"></td>
+                </table>
 
-            <hr class="my-4">
+                <hr class="my-4">
 
-            <div class="jumbotron mgt-30">
-                <p class="lead" th:text="${board.boardContent}"></p>
+                <div class="jumbotron mgt-30">
+                    <p class="lead" th:text="${board.boardContent}"></p>
+                </div>
+                <a th:href="'/board/'+${board.id}+'/edit'" class="btn btn-primary">수정</a>
+                <button type="button" class="btn btn-primary" aria-label="Close">
+                    <span aria-hidden="true" th:data-id="${board.id}" onclick="deleteBoard(this)">삭제</span>
+                </button>
             </div>
-            <a th:href="'/board/'+${board.id}+'/edit'" class="btn btn-primary">수정</a>
-            <button type="button" class="btn btn-primary" aria-label="Close">
-                <span aria-hidden="true" th:data-id="${board.id}" onclick="deleteBoard(this)">삭제</span>
-            </button>
+
         </div>
 
-    </div>
+        <div class="text-center mt-3">
 
-    <div class="text-center mt-3">
-
-        <div class="input-group">
-            <textarea class="form-control" aria-label="With textarea" th:id="commentContent"></textarea>
-            <div class="input-group-prepend">
-                <button type="button" class="btn btn-primary" th:data-id="${board.id}" onclick="saveComment(this)">댓글 작성</button>
+            <div class="input-group">
+                <textarea class="form-control" aria-label="With textarea" th:id="commentContent"></textarea>
+                <div class="input-group-prepend">
+                    <button type="button" class="btn btn-primary" th:data-id="${board.id}" onclick="saveComment(this)">댓글 작성</button>
+                </div>
             </div>
+
         </div>
 
-    </div>
+        </br>
+
+        <div th:each="comment : ${comments}" class="mb-3">
+            <span class="h5" th:text="${comment.createdBy}"></span><br/>
+            <span th:text="${comment.registerTime}"></span><br/><br/>
+            <span th:text="${comment.commentContent}"></span><br/>
+            <hr/>
+        </div>
 
     </div>
 

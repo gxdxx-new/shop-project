@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -94,9 +94,10 @@ public class BoardController {
         boardService.hitsCount(boardId);
 
         BoardDetailDto boardDetailDto = boardService.getBoardDetail(boardId);
+        List<CommentFormDto> commentFormDtos = boardService.getComments(boardId);
 
         model.addAttribute("board", boardDetailDto);
-        model.addAttribute("commentComment", new CommentFormDto());
+        model.addAttribute("comments", commentFormDtos);
         return "board/boardDtl";
     }
 

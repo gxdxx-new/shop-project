@@ -14,6 +14,9 @@ import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.gxdxx.shop.entity.Board.createBoard;
 
 @Service
@@ -111,6 +114,20 @@ public class BoardService {
         commentRepository.save(comment);
 
         return board.getId();
+    }
+
+    @Transactional(readOnly = true)
+    public List<CommentFormDto> getComments(Long boardId) {
+
+        Board board = boardRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
+
+        List<CommentFormDto> commentFormDtos = new ArrayList<>();
+
+        for (Comment comment : board.getComments()) {
+            commentFormDtos.add(new CommentFormDto(comment.getId(), comment.getCommentContent(), comment.getCreatedBy(), comment.getRegisterTime()));
+        }
+
+        return commentFormDtos;
     }
 
 }
