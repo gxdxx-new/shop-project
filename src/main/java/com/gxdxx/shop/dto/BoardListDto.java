@@ -16,15 +16,18 @@ public class BoardListDto {
 
     private long hits;
 
+    private int commentCount;
+
     private String createdBy;
 
     private LocalDateTime registerTime;
 
     @QueryProjection
-    public BoardListDto(Long id, String boardTitle, long hits, String createdBy, LocalDateTime registerTime) {
+    public BoardListDto(Long id, String boardTitle, long hits, int commentCount, String createdBy, LocalDateTime registerTime) {
         this.id = id;
         this.boardTitle = boardTitle;
         this.hits = hits;
+        this.commentCount = commentCount;
         this.createdBy = createdBy;
         this.registerTime = registerTime;
     }

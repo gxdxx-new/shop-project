@@ -60,7 +60,7 @@
             };
 
             var commentFormDto = JSON.stringify(paramData);
-            alert(commentFormDto);
+
             $.ajax({
                 url      : url,
                 type     : "POST",
@@ -73,7 +73,6 @@
                 dataType : "json",
                 cache   : false,
                 success  : function(result, status){
-                    alert("댓글 작성이 완료 되었습니다.");
                     location.href='/board/' + [[${boardId}]];
                 },
                 error : function(jqXHR, status, error){

@@ -38,7 +38,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
     @Override
     public Page<BoardListDto> getBoardPage(BoardSearchDto boardSearchDto, Pageable pageable) {
         QBoard board = QBoard.board;
-        List<BoardListDto> content = queryFactory.select(new QBoardListDto(board.id, board.boardTitle, board.hits, board.createdBy, board.registerTime))
+        List<BoardListDto> content = queryFactory.select(new QBoardListDto(board.id, board.boardTitle, board.hits, board.commentCount, board.createdBy, board.registerTime))
                 .from(board)
                 .where(searchByLike(boardSearchDto.getSearchBy(),
                         boardSearchDto.getSearchQuery()))

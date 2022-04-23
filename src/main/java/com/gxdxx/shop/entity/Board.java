@@ -36,11 +36,14 @@ public class Board extends BaseEntity {
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
+    private int commentCount;
+
     public static Board createBoard(Member member, BoardFormDto boardFormDto) {
         Board board = new Board();
         board.boardTitle = boardFormDto.getBoardTitle();
         board.boardContent = boardFormDto.getBoardContent();
         board.hits = 0;
+        board.commentCount = 0;
         board.setMember(member);
         return board;
     }
@@ -62,6 +65,7 @@ public class Board extends BaseEntity {
     public void addComment(Comment comment) {
         comments.add(comment);
         comment.setBoard(this);
+        this.commentCount++;
     }
 
 }

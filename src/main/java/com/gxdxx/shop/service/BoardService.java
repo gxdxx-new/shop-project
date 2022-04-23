@@ -130,4 +130,12 @@ public class BoardService {
         return commentFormDtos;
     }
 
+    @Transactional(readOnly = true)
+    public int getCommentsCount(Long boardId) {
+
+        Board board = boardRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
+
+        return board.getComments().size();
+    }
+
 }
