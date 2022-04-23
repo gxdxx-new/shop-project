@@ -45,6 +45,50 @@
             });
         }
 
+        function saveComment(obj){
+
+            var boardId = obj.dataset.id;
+            var commentContent = $("#commentContent").val();
+
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+
+            var url = "/board/" + boardId + "/comment";
+
+            var paramData = {
+                commentContent : commentContent
+            };
+
+            var commentFormDto = JSON.stringify(paramData);
+            alert(commentFormDto);
+            $.ajax({
+                url      : url,
+                type     : "POST",
+                contentType : "application/json",
+                data     : commentFormDto,
+                beforeSend : function(xhr){
+                    /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
+                    xhr.setRequestHeader(header, token);
+                },
+                dataType : "json",
+                cache   : false,
+                success  : function(result, status){
+                    alert("댓글 작성이 완료 되었습니다.");
+                    location.href='/';
+                },
+                error : function(jqXHR, status, error){
+
+                    if(jqXHR.status == '401'){
+                        alert('로그인 후 이용해주세요');
+                        location.href='/members/login';
+                    } else{
+                        alert(jqXHR.responseText);
+                    }
+
+                }
+            });
+        }
+
     </script>
 </th:block>
 
@@ -71,29 +115,44 @@
 
     <input type="hidden" id="boardId" th:value="${board.id}">
 
-    <div class="d-flex">
-        <div class="wd50">
+    <div class="container">
+
+    <div class="">
+        <div>
 
             <div class="h4" th:text="${board.boardTitle}"></div>
             <hr class="my-4">
 
-            <div class="h4" th:text="'조회수: ' + ${board.hits}"></div>
-            <div class="h4" th:text="'작성자: ' + ${board.createdBy}"></div>
-            <div class="h4" th:text="'등록일: ' + ${board.registerTime}"></div>
+            <table>
+                <td th:text="'작성자: ' + ${board.createdBy}"></td>
+                <td th:text="' | 등록일: ' + ${board.registerTime}"></td>
+                <td th:text="' | 조회수: ' + ${board.hits}"></td>
+            </table>
+
             <hr class="my-4">
 
-            <div class="jumbotron jumbotron-fluid mgt-30">
-                <div class="container">
-                    <h4 class="display-5">내용</h4>
-                    <hr class="my-4">
-                    <p class="lead" th:text="${board.boardContent}"></p>
-                </div>
+            <div class="jumbotron mgt-30">
+                <p class="lead" th:text="${board.boardContent}"></p>
             </div>
             <a th:href="'/board/'+${board.id}+'/edit'" class="btn btn-primary">수정</a>
             <button type="button" class="btn btn-primary" aria-label="Close">
                 <span aria-hidden="true" th:data-id="${board.id}" onclick="deleteBoard(this)">삭제</span>
             </button>
         </div>
+
+    </div>
+
+    <div class="text-center mt-3">
+
+        <div class="input-group">
+            <textarea class="form-control" aria-label="With textarea" th:id="commentContent"></textarea>
+            <div class="input-group-prepend">
+                <button type="button" class="btn btn-primary" th:data-id="${board.id}" onclick="saveComment(this)">댓글 작성</button>
+            </div>
+        </div>
+
+    </div>
+
     </div>
 
 </div>

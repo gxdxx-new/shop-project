@@ -3,6 +3,7 @@ package com.gxdxx.shop.service;
 import com.gxdxx.shop.dto.*;
 import com.gxdxx.shop.entity.*;
 import com.gxdxx.shop.repository.BoardRepository;
+import com.gxdxx.shop.repository.CommentRepository;
 import com.gxdxx.shop.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,7 @@ public class BoardService {
 
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
+    private final CommentRepository commentRepository;
 
     public Long saveBoard(String email, BoardFormDto boardFormDto) throws Exception {
 
@@ -98,6 +100,17 @@ public class BoardService {
     @Transactional(readOnly = true)
     public Page<BoardListDto> getBoardPage(BoardSearchDto boardSearchDto, Pageable pageable) {
         return boardRepository.getBoardPage(boardSearchDto, pageable);
+    }
+
+    public Long saveComment(String email, Long boardId, CommentFormDto commentFormDto) throws Exception {
+
+        Member member = memberRepository.findByEmail(email);
+        Board board = boardRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
+
+        Comment comment = Board.createComment(member, board, commentFormDto);
+        commentRepository.save(comment);
+
+        return board.getId();
     }
 
 }

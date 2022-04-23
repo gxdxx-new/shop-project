@@ -1,7 +1,6 @@
 package com.gxdxx.shop.controller;
 
 import com.gxdxx.shop.dto.*;
-import com.gxdxx.shop.entity.Board;
 import com.gxdxx.shop.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.Optional;
 
 @Controller
@@ -96,6 +96,7 @@ public class BoardController {
         BoardDetailDto boardDetailDto = boardService.getBoardDetail(boardId);
 
         model.addAttribute("board", boardDetailDto);
+        model.addAttribute("commentComment", new CommentFormDto());
         return "board/boardDtl";
     }
 
@@ -123,6 +124,26 @@ public class BoardController {
         model.addAttribute("maxPage", 5);
 
         return "board/boardList";
+    }
+
+    @PostMapping(value = "/board/{boardId}/comment")  // 댓글쓰기
+    public @ResponseBody ResponseEntity commentNew(@Valid @RequestBody CommentFormDto commentFormDto, BindingResult bindingResult,
+                           @PathVariable("boardId") Long boardId, Principal principal) {
+
+        if (bindingResult.hasErrors()) {    // 필수값이 들어있는지 검사
+            return new ResponseEntity<String>("댓글을 50자 이내로 입력해주세요.", HttpStatus.FORBIDDEN);
+        }
+
+        String email = principal.getName();
+
+        try {
+            System.out.println(boardService.saveComment(email, boardId, commentFormDto));
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+
+        return new ResponseEntity<Long>(boardId, HttpStatus.OK);
     }
 
 }
