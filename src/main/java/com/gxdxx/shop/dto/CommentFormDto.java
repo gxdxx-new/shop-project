@@ -17,13 +17,16 @@ public class CommentFormDto {
     @Length(max = 50, message = "댓글은 50자 이하로 입력해주세요.")
     private String commentContent;
 
+    private int status;
+
     private String createdBy;
 
     private LocalDateTime registerTime;
 
-    public CommentFormDto(Long commentId, String commentContent, String createdBy, LocalDateTime registerTime) {
+    public CommentFormDto(Long commentId, String commentContent, int status, String createdBy, LocalDateTime registerTime) {
         this.id = commentId;
         this.commentContent = commentContent;
+        this.status = status;
         this.createdBy = createdBy;
         this.registerTime = registerTime;
     }

@@ -56,6 +56,7 @@ public class Board extends BaseEntity {
     public static Comment createComment(Member member, Board board, CommentFormDto commentFormDto) {
         Comment comment = new Comment();
         comment.setCommentContent(commentFormDto.getCommentContent());
+        comment.setStatus(1);
         comment.setMember(member);
         comment.setBoard(board);
         board.addComment(comment);

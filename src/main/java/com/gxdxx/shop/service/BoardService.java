@@ -88,7 +88,7 @@ public class BoardService {
 
     public Long updateBoard(BoardFormDto boardFormDto) throws Exception {
 
-        //상품 수정
+        //게시글 수정
         Board board = boardRepository.findById(boardFormDto.getId()).orElseThrow(EntityNotFoundException::new);
         board.updateBoard(boardFormDto);
 
@@ -124,7 +124,7 @@ public class BoardService {
         List<CommentFormDto> commentFormDtos = new ArrayList<>();
 
         for (Comment comment : board.getComments()) {
-            commentFormDtos.add(new CommentFormDto(comment.getId(), comment.getCommentContent(), comment.getCreatedBy(), comment.getRegisterTime()));
+            commentFormDtos.add(new CommentFormDto(comment.getId(), comment.getCommentContent(), comment.getStatus(), comment.getCreatedBy(), comment.getRegisterTime()));
         }
 
         return commentFormDtos;
@@ -149,6 +149,21 @@ public class BoardService {
         }
 
         return true;
+    }
+
+    public void updateCommentView(Long commentId) throws Exception {
+
+        //댓글 수정
+        Comment comment = commentRepository.findById(commentId).orElseThrow(EntityNotFoundException::new);
+        comment.setStatus(0);
+
+    }
+
+    public void updateComment(CommentFormDto commentFormDto) throws Exception {
+
+        Comment comment = commentRepository.findById(commentFormDto.getId()).orElseThrow(EntityNotFoundException::new);
+        comment.updateComment(commentFormDto);
+
     }
 
     public void deleteComment(Long boardId, Long commentId) {
