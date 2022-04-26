@@ -9,7 +9,6 @@ import javax.persistence.*;
 @Entity
 @Table(name="comment")
 @Getter
-@Setter
 public class Comment extends BaseEntity {
 
     @Id
@@ -31,9 +30,23 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "board_id")
     private Board board;
 
+    public static Comment createComment(Member member, Board board, CommentFormDto commentFormDto) {
+        Comment comment = new Comment();
+        comment.commentContent = commentFormDto.getCommentContent();
+        comment.status = 1;
+        comment.member = member;
+        comment.board = board;
+        board.addComment(comment);
+        return comment;
+    }
+
     public void updateComment(CommentFormDto commentFormDto) {
         this.commentContent = commentFormDto.getCommentContent();
         this.status = 1;
+    }
+
+    public void changeStatus() {
+        this.status = 0;
     }
 
 }

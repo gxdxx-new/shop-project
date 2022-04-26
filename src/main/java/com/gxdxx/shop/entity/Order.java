@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
-@Getter @Setter
+@Getter
 public class Order extends BaseEntity {
 
     @Id @GeneratedValue
@@ -37,12 +37,12 @@ public class Order extends BaseEntity {
 
     public static Order createOrder(Member member, List<OrderItem> orderItemList) {
         Order order = new Order();
-        order.setMember(member);
+        order.member = member;
         for (OrderItem orderItem : orderItemList) {
             order.addOrderItem(orderItem);
         }
-        order.setOrderStatus(OrderStatus.ORDER);
-        order.setOrderDate(LocalDateTime.now());
+        order.orderStatus = OrderStatus.ORDER;
+        order.orderDate = LocalDateTime.now();
         return order;
     }
 

@@ -7,7 +7,7 @@ import lombok.ToString;
 import javax.persistence.*;
 
 @Entity
-@Getter @Setter
+@Getter
 @ToString
 public class CartItem extends BaseEntity {
 
@@ -27,9 +27,9 @@ public class CartItem extends BaseEntity {
 
     public static CartItem createCartItem(Cart cart, Item item, int count) {
         CartItem cartItem = new CartItem();
-        cartItem.setCart(cart);
-        cartItem.setItem(item);
-        cartItem.setCount(count);
+        cartItem.cart = cart;
+        cartItem.item = item;
+        cartItem.count = count;
         return cartItem;
     }
 

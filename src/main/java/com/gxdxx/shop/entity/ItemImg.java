@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "item_img")
-@Getter @Setter
+@Getter
 public class ItemImg extends BaseEntity {
 
     @Id
@@ -26,6 +26,17 @@ public class ItemImg extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
+
+    public static ItemImg saveItemImg(Item item, int i) {
+        ItemImg itemImg = new ItemImg();
+        itemImg.item = item;
+        if (i == 0) {
+            itemImg.repImgYn = "Y";
+        } else {
+            itemImg.repImgYn = "N";
+        }
+        return itemImg;
+    }
 
     public void updateItemImg(String oriImgName, String imgName, String imgUrl) {
         this.oriImgName = oriImgName;

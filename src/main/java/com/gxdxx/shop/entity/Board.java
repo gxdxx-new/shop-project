@@ -2,8 +2,7 @@ package com.gxdxx.shop.entity;
 
 import com.gxdxx.shop.dto.BoardFormDto;
 import com.gxdxx.shop.dto.CommentFormDto;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,7 +10,6 @@ import java.util.List;
 @Entity
 @Table(name="board")
 @Getter
-@Setter
 public class Board extends BaseEntity {
 
     @Id
@@ -44,7 +42,7 @@ public class Board extends BaseEntity {
         board.boardContent = boardFormDto.getBoardContent();
         board.hits = 0;
         board.commentCount = 0;
-        board.setMember(member);
+        board.member = member;
         return board;
     }
 
@@ -53,20 +51,17 @@ public class Board extends BaseEntity {
         this.boardContent = boardFormDto.getBoardContent();
     }
 
-    public static Comment createComment(Member member, Board board, CommentFormDto commentFormDto) {
-        Comment comment = new Comment();
-        comment.setCommentContent(commentFormDto.getCommentContent());
-        comment.setStatus(1);
-        comment.setMember(member);
-        comment.setBoard(board);
-        board.addComment(comment);
-        return comment;
+    public void addHitsCount() {
+        this.hits++;
     }
 
     public void addComment(Comment comment) {
         comments.add(comment);
-        comment.setBoard(this);
         this.commentCount++;
+    }
+
+    public void removeCommentCount() {
+        this.commentCount--;
     }
 
 }

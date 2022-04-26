@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "cart")
-@Getter @Setter
+@Getter
 @ToString
 public class Cart extends BaseEntity {
 
@@ -22,7 +22,7 @@ public class Cart extends BaseEntity {
 
     public static Cart createCart(Member member) {
         Cart cart = new Cart();
-        cart.setMember(member);
+        cart.member = member;
         return cart;
     }
 

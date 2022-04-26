@@ -43,10 +43,11 @@ public class BoardService {
     public BoardFormDto getBoardForm(Long boardId) {
 
         Board board = boardRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
-        BoardFormDto boardFormDto = new BoardFormDto();
-        boardFormDto.setId(board.getId());
-        boardFormDto.setBoardTitle(board.getBoardTitle());
-        boardFormDto.setBoardContent(board.getBoardContent());
+        BoardFormDto boardFormDto = BoardFormDto.builder()
+                .id(board.getId())
+                .boardTitle(board.getBoardTitle())
+                .boardContent(board.getBoardContent())
+                .build();
 
         return boardFormDto;
     }
@@ -55,13 +56,14 @@ public class BoardService {
     public BoardDetailDto getBoardDetail(Long boardId) {
 
         Board board = boardRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
-        BoardDetailDto boardDetailDto = new BoardDetailDto();
-        boardDetailDto.setId(board.getId());
-        boardDetailDto.setBoardTitle(board.getBoardTitle());
-        boardDetailDto.setBoardContent(board.getBoardContent());
-        boardDetailDto.setHits(board.getHits());
-        boardDetailDto.setCreatedBy(board.getCreatedBy());
-        boardDetailDto.setRegisterTime(board.getRegisterTime());
+        BoardDetailDto boardDetailDto = BoardDetailDto.builder()
+                .id(board.getId())
+                .boardTitle(board.getBoardTitle())
+                .boardContent(board.getBoardContent())
+                .hits(board.getHits())
+                .createdBy(board.getCreatedBy())
+                .registerTime(board.getRegisterTime())
+                .build();
 
         return boardDetailDto;
     }
@@ -69,7 +71,7 @@ public class BoardService {
     public void hitsCount(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
 
-        board.setHits(board.getHits() + 1);
+        board.addHitsCount();
 
     }
 
@@ -110,7 +112,7 @@ public class BoardService {
         Member member = memberRepository.findByEmail(email);
         Board board = boardRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
 
-        Comment comment = Board.createComment(member, board, commentFormDto);
+        Comment comment = Comment.createComment(member, board, commentFormDto);
         commentRepository.save(comment);
 
         return board.getId();
@@ -124,7 +126,15 @@ public class BoardService {
         List<CommentFormDto> commentFormDtos = new ArrayList<>();
 
         for (Comment comment : board.getComments()) {
-            commentFormDtos.add(new CommentFormDto(comment.getId(), comment.getCommentContent(), comment.getStatus(), comment.getCreatedBy(), comment.getRegisterTime()));
+            commentFormDtos.add(
+                    CommentFormDto.builder()
+                            .commentId(comment.getId())
+                            .commentContent(comment.getCommentContent())
+                            .status(comment.getStatus())
+                            .createdBy(comment.getCreatedBy())
+                            .registerTime(comment.getRegisterTime())
+                            .build()
+            );
         }
 
         return commentFormDtos;
@@ -155,7 +165,7 @@ public class BoardService {
 
         //댓글 수정
         Comment comment = commentRepository.findById(commentId).orElseThrow(EntityNotFoundException::new);
-        comment.setStatus(0);
+        comment.changeStatus();
 
     }
 
@@ -174,7 +184,7 @@ public class BoardService {
         for (Comment findComment : board.getComments()) {
             if (findComment.getId() == comment.getId()) {
                 board.getComments().remove(findComment);
-                board.setCommentCount(board.getCommentCount() - 1);
+                board.removeCommentCount();
                 break;
             }
         }

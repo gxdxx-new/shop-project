@@ -6,7 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Getter @Setter
+@Getter
 public class OrderItem extends BaseEntity {
 
     @Id @GeneratedValue
@@ -27,12 +27,16 @@ public class OrderItem extends BaseEntity {
 
     public static OrderItem createOrderItem(Item item, int count) {
         OrderItem orderItem = new OrderItem();
-        orderItem.setItem(item);
-        orderItem.setCount(count);
-        orderItem.setOrderPrice(item.getPrice());
+        orderItem.item = item;
+        orderItem.count = count;
+        orderItem.orderPrice = item.getPrice();
 
         item.removeStock(count);
         return orderItem;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     public int getTotalPrice() {

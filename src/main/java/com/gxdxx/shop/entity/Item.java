@@ -3,6 +3,7 @@ package com.gxdxx.shop.entity;
 import com.gxdxx.shop.constant.ItemSellStatus;
 import com.gxdxx.shop.dto.ItemFormDto;
 import com.gxdxx.shop.exception.OutOfStockException;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "item")
-@Getter @Setter
+@Getter
 @ToString
 public class Item extends BaseEntity {
 
@@ -35,6 +36,15 @@ public class Item extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus;  //상품 판매 상태
+
+    @Builder
+    public Item(String itemName, int price, int stockQuantity, String itemDescription, ItemSellStatus itemSellStatus) {
+        this.itemName = itemName;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+        this.itemDescription = itemDescription;
+        this.itemSellStatus = itemSellStatus;
+    }
 
     public void updateItem(ItemFormDto itemFormDto) {
         this.itemName = itemFormDto.getItemName();

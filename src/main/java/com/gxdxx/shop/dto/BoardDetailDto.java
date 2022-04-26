@@ -1,5 +1,6 @@
 package com.gxdxx.shop.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,5 +21,15 @@ public class BoardDetailDto {
     private String createdBy;
 
     private LocalDateTime registerTime;
+
+    @Builder
+    public BoardDetailDto(Long id, String boardTitle, String boardContent, long hits, String createdBy, LocalDateTime registerTime) {
+        this.id = id;
+        this.boardTitle = boardTitle;
+        this.boardContent = boardContent;
+        this.hits = hits;
+        this.createdBy = createdBy;
+        this.registerTime = registerTime;
+    }
 
 }

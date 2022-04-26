@@ -1,5 +1,6 @@
 package com.gxdxx.shop.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
@@ -23,6 +24,7 @@ public class CommentFormDto {
 
     private LocalDateTime registerTime;
 
+    @Builder
     public CommentFormDto(Long commentId, String commentContent, int status, String createdBy, LocalDateTime registerTime) {
         this.id = commentId;
         this.commentContent = commentContent;
