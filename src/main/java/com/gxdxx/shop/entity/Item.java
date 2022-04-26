@@ -3,16 +3,13 @@ package com.gxdxx.shop.entity;
 import com.gxdxx.shop.constant.ItemSellStatus;
 import com.gxdxx.shop.dto.ItemFormDto;
 import com.gxdxx.shop.exception.OutOfStockException;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "item")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString
 public class Item extends BaseEntity {
@@ -45,6 +42,7 @@ public class Item extends BaseEntity {
         this.itemDescription = itemDescription;
         this.itemSellStatus = itemSellStatus;
     }
+
 
     public void updateItem(ItemFormDto itemFormDto) {
         this.itemName = itemFormDto.getItemName();

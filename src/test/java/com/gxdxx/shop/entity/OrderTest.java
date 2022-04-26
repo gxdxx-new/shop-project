@@ -16,7 +16,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,14 +42,13 @@ class OrderTest {
     EntityManager em;
 
     public Item createItem() {
-        Item item = new Item();
-        item.setItemName("테스트 상품");
-        item.setPrice(10000);
-        item.setItemDescription("상세 설명");
-        item.setItemSellStatus(ItemSellStatus.SELL);
-        item.setStockQuantity(100);
-        item.setRegisterTime(LocalDateTime.now());
-        item.setUpdateTime(LocalDateTime.now());
+        Item item = Item.builder()
+                .itemName("테스트 상품")
+                .price(10000)
+                .itemDescription("테스트 상품 상세 설명")
+                .itemSellStatus(ItemSellStatus.SELL)
+                .stockQuantity(100)
+                .build();
         return item;
     }
 
@@ -61,10 +61,7 @@ class OrderTest {
         for (int i = 0; i < 3; i++) {
             Item item = this.createItem();
             itemRepository.save(item);
-            OrderItem orderItem = new OrderItem();
-            orderItem.setItem(item);
-            orderItem.setCount(10);
-            orderItem.setOrderPrice(1000);
+            OrderItem orderItem = OrderItem.createOrderItem(item, 0);
             orderItem.setOrder(order);
             order.getOrderItems().add(orderItem);
         }
@@ -78,23 +75,18 @@ class OrderTest {
     }
 
     public Order createOrder() {
-        Order order = new Order();
-
-        for (int i = 0; i < 3; i++) {
-            Item item = createItem();
-            itemRepository.save(item);
-            OrderItem orderItem = new OrderItem();
-            orderItem.setItem(item);
-            orderItem.setCount(10);
-            orderItem.setOrderPrice(1000);
-            orderItem.setOrder(order);
-            order.getOrderItems().add(orderItem);
-        }
-
         Member member = new Member();
         memberRepository.save(member);
 
-        order.setMember(member);
+        List<OrderItem> orderItemList = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            Item item = createItem();
+            itemRepository.save(item);
+            OrderItem orderItem = OrderItem.createOrderItem(item, 10);
+            orderItemList.add(orderItem);
+        }
+
+        Order order = Order.createOrder(member, orderItemList);
         orderRepository.save(order);
         return order;
     }

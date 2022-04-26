@@ -1,13 +1,15 @@
 package com.gxdxx.shop.entity;
 
 import com.gxdxx.shop.dto.CommentFormDto;
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name="comment")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Comment extends BaseEntity {
 

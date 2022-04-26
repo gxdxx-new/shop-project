@@ -28,7 +28,13 @@ public class ItemService {
     public Long saveItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList) throws Exception {
 
         //상품 등록
-        Item item = itemFormDto.createItem();
+        Item item = Item.builder()
+                .itemName(itemFormDto.getItemName())
+                .price(itemFormDto.getPrice())
+                .itemDescription(itemFormDto.getItemDescription())
+                .itemSellStatus(itemFormDto.getItemSellStatus())
+                .stockQuantity(itemFormDto.getStockQuantity())
+                .build();
         itemRepository.save(item);
 
         //이미지 등록
@@ -51,7 +57,13 @@ public class ItemService {
         }
 
         Item item = itemRepository.findById(itemId).orElseThrow(EntityNotFoundException::new);
-        ItemFormDto itemFormDto = ItemFormDto.of(item);
+        ItemFormDto itemFormDto = ItemFormDto.builder()
+                .id(item.getId())
+                .itemName(item.getItemName())
+                .itemDescription(item.getItemDescription())
+                .price(item.getPrice())
+                .itemSellStatus(item.getItemSellStatus())
+                .build();
         itemFormDto.setItemImgDtoList(itemImgDtoList);
 
         return itemFormDto;

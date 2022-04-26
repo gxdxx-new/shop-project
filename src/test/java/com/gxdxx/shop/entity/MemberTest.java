@@ -47,7 +47,7 @@ class MemberTest {
         final Member member = Member.createMember(memberFormDto, passwordEncoder);
 
         //then
-        Assertions.assertThat(member.getRole()).isEqualTo(Role.ADMIN);
+        Assertions.assertThat(member.getRole()).isEqualTo(Role.USER);
     }
 
 //    @Autowired

@@ -1,10 +1,10 @@
 package com.gxdxx.shop.dto;
 
 import com.gxdxx.shop.constant.ItemSellStatus;
-import com.gxdxx.shop.entity.Item;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.modelmapper.ModelMapper;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter
+@NoArgsConstructor
 public class ItemFormDto {
 
     private Long id;
@@ -34,14 +35,14 @@ public class ItemFormDto {
 
     private List<Long> itemImgIds = new ArrayList<>();
 
-    private static ModelMapper modelMapper = new ModelMapper();
-
-    public Item createItem() {
-        return modelMapper.map(this, Item.class);
-    }
-
-    public static ItemFormDto of(Item item) {
-        return modelMapper.map(item, ItemFormDto.class);
+    @Builder
+    public ItemFormDto(Long id, String itemName, int price, String itemDescription, int stockQuantity, ItemSellStatus itemSellStatus) {
+        this.id = id;
+        this.itemName = itemName;
+        this.price = price;
+        this.itemDescription = itemDescription;
+        this.stockQuantity = stockQuantity;
+        this.itemSellStatus = itemSellStatus;
     }
 
 }

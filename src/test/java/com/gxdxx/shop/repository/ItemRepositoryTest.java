@@ -18,10 +18,7 @@ import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.time.LocalDateTime;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestPropertySource(locations="classpath:application-test.properties")
@@ -36,28 +33,25 @@ class ItemRepositoryTest {
     @Test
     @DisplayName("상품 저장 테스트")
     public void saveItemTest() {
-        Item item = new Item();
-        item.setItemName("테스트 상품");
-        item.setPrice(10000);
-        item.setStockQuantity(100);
-        item.setItemDescription("테스트 상품 상세 설명");
-        item.setItemSellStatus(ItemSellStatus.SELL);
-        item.setRegisterTime(LocalDateTime.now());
-        item.setUpdateTime(LocalDateTime.now());
-        Item savedItem = itemRepository.save(item);
-        System.out.println(savedItem.toString());
+        Item item = Item.builder()
+                .itemName("테스트 상품")
+                .price(10000)
+                .itemDescription("테스트 상품 상세 설명")
+                .itemSellStatus(ItemSellStatus.SELL)
+                .stockQuantity(100)
+                .build();
+        System.out.println(item.toString());
     }
 
     public void createItemList() {
         for (int i = 1; i <= 10; i++) {
-            Item item = new Item();
-            item.setItemName("테스트 상품" + i);
-            item.setPrice(10000 + i);
-            item.setStockQuantity(100);
-            item.setItemDescription("테스트 상품 상세 설명" + i);
-            item.setItemSellStatus(ItemSellStatus.SELL);
-            item.setRegisterTime(LocalDateTime.now());
-            item.setUpdateTime(LocalDateTime.now());
+            Item item = Item.builder()
+                    .itemName("테스트 상품" + i)
+                    .price(10000)
+                    .itemDescription("테스트 상품 상세 설명" + i)
+                    .itemSellStatus(ItemSellStatus.SELL)
+                    .stockQuantity(100)
+                    .build();
             Item savedItem = itemRepository.save(item);
         }
     }
@@ -132,26 +126,24 @@ class ItemRepositoryTest {
 
     public void createItemList2() {
         for (int i = 1; i <= 5; i++) {
-            Item item = new Item();
-            item.setItemName("테스트 상품" + i);
-            item.setPrice(10000 + i);
-            item.setStockQuantity(100);
-            item.setItemDescription("테스트 상품 상세 설명" + i);
-            item.setItemSellStatus(ItemSellStatus.SELL);
-            item.setRegisterTime(LocalDateTime.now());
-            item.setUpdateTime(LocalDateTime.now());
+            Item item = Item.builder()
+                    .itemName("테스트 상품" + i)
+                    .price(10000)
+                    .itemDescription("테스트 상품 상세 설명" + i)
+                    .itemSellStatus(ItemSellStatus.SELL)
+                    .stockQuantity(100)
+                    .build();
             Item savedItem = itemRepository.save(item);
         }
 
         for (int i = 6; i <= 10; i++) {
-            Item item = new Item();
-            item.setItemName("테스트 상품" + i);
-            item.setPrice(10000 + i);
-            item.setStockQuantity(0);
-            item.setItemDescription("테스트 상품 상세 설명" + i);
-            item.setItemSellStatus(ItemSellStatus.SOLD_OUT);
-            item.setRegisterTime(LocalDateTime.now());
-            item.setUpdateTime(LocalDateTime.now());
+            Item item = Item.builder()
+                    .itemName("테스트 상품" + i)
+                    .price(10000)
+                    .itemDescription("테스트 상품 상세 설명" + i)
+                    .itemSellStatus(ItemSellStatus.SOLD_OUT)
+                    .stockQuantity(0)
+                    .build();
             Item savedItem = itemRepository.save(item);
         }
     }

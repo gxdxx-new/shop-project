@@ -1,7 +1,6 @@
 package com.gxdxx.shop.entity;
 
 import com.gxdxx.shop.dto.BoardFormDto;
-import com.gxdxx.shop.dto.CommentFormDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -9,6 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name="board")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Board extends BaseEntity {
 

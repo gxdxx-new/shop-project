@@ -2,15 +2,14 @@ package com.gxdxx.shop.entity;
 
 import com.gxdxx.shop.constant.Role;
 import com.gxdxx.shop.dto.MemberFormDto;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name="member")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString
 public class Member extends BaseEntity {

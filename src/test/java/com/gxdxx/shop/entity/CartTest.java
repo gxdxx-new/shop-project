@@ -49,8 +49,7 @@ class CartTest {
         Member member = createMember();
         memberRepository.save(member);
 
-        Cart cart = new Cart();
-        cart.setMember(member);
+        Cart cart = Cart.createCart(member);
         cartRepository.save(cart);
 
         em.flush();

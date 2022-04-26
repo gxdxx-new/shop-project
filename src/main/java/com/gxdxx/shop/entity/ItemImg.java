@@ -1,12 +1,14 @@
 package com.gxdxx.shop.entity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "item_img")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class ItemImg extends BaseEntity {
 
