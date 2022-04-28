@@ -2,6 +2,7 @@ package com.gxdxx.shop.service;
 
 import com.gxdxx.shop.dto.MemberFormDto;
 import com.gxdxx.shop.entity.Member;
+import com.gxdxx.shop.repository.MemberRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,6 +23,9 @@ class MemberServiceTest {
 
     @Autowired
     MemberService memberService;
+
+    @Autowired
+    MemberRepository memberRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -38,7 +44,8 @@ class MemberServiceTest {
     public void saveMemberTest() {
         MemberFormDto memberFormDto = this.createMember();
         Member member = Member.createMember(memberFormDto.getName(), memberFormDto.getEmail(), memberFormDto.getAddress(), memberFormDto.getPassword(), passwordEncoder);
-        Member savedMember = memberService.saveMember(member);
+        Long memberId = memberService.saveMember(member);
+        Member savedMember = memberRepository.findById(memberId).orElseThrow(EntityNotFoundException::new);
 
         assertEquals(member.getEmail(), savedMember.getEmail());
         assertEquals(member.getName(), savedMember.getName());

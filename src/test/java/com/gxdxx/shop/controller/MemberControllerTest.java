@@ -47,7 +47,7 @@ public class MemberControllerTest {
         String password = "1234";
         MemberFormDto memberFormDto = this.createMember(email, password);
         Member member = Member.createMember(memberFormDto.getName(), memberFormDto.getEmail(), memberFormDto.getAddress(), memberFormDto.getPassword(), passwordEncoder);
-        Member savedMember = memberService.saveMember(member);
+        memberService.saveMember(member);
 
         mockMvc.perform(formLogin().userParameter("email")
                 .loginProcessingUrl("/members/login")
