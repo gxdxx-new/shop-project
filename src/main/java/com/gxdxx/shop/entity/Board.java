@@ -36,19 +36,19 @@ public class Board extends BaseEntity {
 
     private int commentCount;
 
-    public static Board createBoard(Member member, BoardFormDto boardFormDto) {
+    public static Board createBoard(Member member, String boardTitle, String boardContent) {
         Board board = new Board();
-        board.boardTitle = boardFormDto.getBoardTitle();
-        board.boardContent = boardFormDto.getBoardContent();
+        board.boardTitle = boardTitle;
+        board.boardContent = boardContent;
         board.hits = 0;
         board.commentCount = 0;
         board.member = member;
         return board;
     }
 
-    public void updateBoard(BoardFormDto boardFormDto) {
-        this.boardTitle = boardFormDto.getBoardTitle();
-        this.boardContent = boardFormDto.getBoardContent();
+    public void updateBoard(String boardTitle, String boardContent) {
+        this.boardTitle = boardTitle;
+        this.boardContent = boardContent;
     }
 
     public void addHitsCount() {

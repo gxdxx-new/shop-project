@@ -1,8 +1,9 @@
 package com.gxdxx.shop.entity;
 
 import com.gxdxx.shop.constant.OrderStatus;
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Order extends BaseEntity {
 

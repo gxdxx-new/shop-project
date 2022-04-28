@@ -24,19 +24,20 @@ class MemberServiceTest {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public Member createMember() {
+    public MemberFormDto createMember() {
         MemberFormDto memberFormDto = new MemberFormDto();
         memberFormDto.setEmail("test@email.com");
         memberFormDto.setName("홍길동");
         memberFormDto.setAddress("경북 경산시 대동");
         memberFormDto.setPassword("123123");
-        return Member.createMember(memberFormDto, passwordEncoder);
+        return memberFormDto;
     }
 
     @Test
     @DisplayName("회원가입 테스트")
     public void saveMemberTest() {
-        Member member = createMember();
+        MemberFormDto memberFormDto = this.createMember();
+        Member member = Member.createMember(memberFormDto.getName(), memberFormDto.getEmail(), memberFormDto.getAddress(), memberFormDto.getPassword(), passwordEncoder);
         Member savedMember = memberService.saveMember(member);
 
         assertEquals(member.getEmail(), savedMember.getEmail());
@@ -49,8 +50,9 @@ class MemberServiceTest {
     @Test
     @DisplayName("중복 회원 가입 테스트")
     public void saveDuplicateMemberTest() {
-        Member member1 = createMember();
-        Member member2 = createMember();
+        MemberFormDto memberFormDto = this.createMember();
+        Member member1 = Member.createMember(memberFormDto.getName(), memberFormDto.getEmail(), memberFormDto.getAddress(), memberFormDto.getPassword(), passwordEncoder);
+        Member member2 = Member.createMember(memberFormDto.getName(), memberFormDto.getEmail(), memberFormDto.getAddress(), memberFormDto.getPassword(), passwordEncoder);
         memberService.saveMember(member1);
 
         Throwable e = assertThrows(IllegalStateException.class, () -> {

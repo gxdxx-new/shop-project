@@ -30,14 +30,14 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public static Member createMember(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder) {
+    public static Member createMember(String name, String email, String address, String password, PasswordEncoder passwordEncoder) {
         Member member = new Member();
-        member.name = memberFormDto.getName();
-        member.email = memberFormDto.getEmail();
-        member.address = memberFormDto.getAddress();
-        String password = passwordEncoder.encode(memberFormDto.getPassword());
-        member.password = password;
-        if (memberFormDto.getEmail().equals("admin@admin.com")) {
+        member.name = name;
+        member.email = email;
+        member.address = address;
+        String encodedPassword = passwordEncoder.encode(password);
+        member.password = encodedPassword;
+        if (email.equals("admin@admin.com")) {
             member.role = Role.ADMIN;
         } else {
             member.role = Role.USER;

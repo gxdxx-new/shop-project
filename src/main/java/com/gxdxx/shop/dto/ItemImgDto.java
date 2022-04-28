@@ -1,6 +1,7 @@
 package com.gxdxx.shop.dto;
 
 import com.gxdxx.shop.entity.ItemImg;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
@@ -18,10 +19,13 @@ public class ItemImgDto {
 
     private String repImgYn;
 
-    private static ModelMapper modelMapper = new ModelMapper();
-
-    public static ItemImgDto of(ItemImg itemImg) {
-        return modelMapper.map(itemImg, ItemImgDto.class);
+    @Builder
+    public ItemImgDto(Long id, String imgName, String oriImgName, String imgUrl, String repImgYn) {
+        this.id = id;
+        this.imgName = imgName;
+        this.oriImgName = oriImgName;
+        this.imgUrl = imgUrl;
+        this.repImgYn = repImgYn;
     }
 
 }

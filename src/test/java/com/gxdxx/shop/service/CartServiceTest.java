@@ -51,13 +51,13 @@ public class CartServiceTest {
         return item;
     }
 
-    public Member createMember() {
+    public MemberFormDto createMember() {
         MemberFormDto memberFormDto = new MemberFormDto();
         memberFormDto.setEmail("test@email.com");
         memberFormDto.setName("홍길동");
         memberFormDto.setAddress("경북 경산시 대동");
         memberFormDto.setPassword("123123");
-        return Member.createMember(memberFormDto, passwordEncoder);
+        return memberFormDto;
     }
 
     @Test
@@ -65,7 +65,8 @@ public class CartServiceTest {
     public void addCart() {
         Item item = saveItem();
         itemRepository.save(item);
-        Member member = createMember();
+        MemberFormDto memberFormDto = this.createMember();
+        Member member = Member.createMember(memberFormDto.getName(), memberFormDto.getEmail(), memberFormDto.getAddress(), memberFormDto.getPassword(), passwordEncoder);
         memberRepository.save(member);
 
         CartItemDto cartItemDto = new CartItemDto();

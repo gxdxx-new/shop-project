@@ -56,20 +56,21 @@ class OrderServiceTest {
         return itemRepository.save(item);
     }
 
-    public Member createMember() {
+    public MemberFormDto createMember() {
         MemberFormDto memberFormDto = new MemberFormDto();
         memberFormDto.setEmail("test@email.com");
         memberFormDto.setName("홍길동");
         memberFormDto.setAddress("경북 경산시 대동");
         memberFormDto.setPassword("123123");
-        return Member.createMember(memberFormDto, passwordEncoder);
+        return memberFormDto;
     }
 
     @Test
     @DisplayName("주문 테스트")
     public void order() {
         Item item = saveItem();
-        Member member = createMember();
+        MemberFormDto memberFormDto = this.createMember();
+        Member member = Member.createMember(memberFormDto.getName(), memberFormDto.getEmail(), memberFormDto.getAddress(), memberFormDto.getPassword(), passwordEncoder);
 
         OrderDto orderDto = new OrderDto();
         orderDto.setCount(10);
@@ -90,7 +91,8 @@ class OrderServiceTest {
     @DisplayName("주문 취소 테스트")
     public void cancelOrder() {
         Item item = saveItem();
-        Member member  = createMember();
+        MemberFormDto memberFormDto = this.createMember();
+        Member member = Member.createMember(memberFormDto.getName(), memberFormDto.getEmail(), memberFormDto.getAddress(), memberFormDto.getPassword(), passwordEncoder);
 
         OrderDto orderDto = new OrderDto();
         orderDto.setCount(10);

@@ -33,7 +33,7 @@ public class BoardService {
         Member member = memberRepository.findByEmail(email);
 
         //글 등록
-        Board board = createBoard(member, boardFormDto);
+        Board board = createBoard(member, boardFormDto.getBoardTitle(), boardFormDto.getBoardContent());
         boardRepository.save(board);
 
         return board.getId();
@@ -92,7 +92,7 @@ public class BoardService {
 
         //게시글 수정
         Board board = boardRepository.findById(boardFormDto.getId()).orElseThrow(EntityNotFoundException::new);
-        board.updateBoard(boardFormDto);
+        board.updateBoard(boardFormDto.getBoardTitle(), board.getBoardContent());
 
         return board.getId();
     }
@@ -112,7 +112,7 @@ public class BoardService {
         Member member = memberRepository.findByEmail(email);
         Board board = boardRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
 
-        Comment comment = Comment.createComment(member, board, commentFormDto);
+        Comment comment = Comment.createComment(member, board, commentFormDto.getCommentContent());
         commentRepository.save(comment);
 
         return board.getId();
@@ -172,7 +172,7 @@ public class BoardService {
     public void updateComment(CommentFormDto commentFormDto) throws Exception {
 
         Comment comment = commentRepository.findById(commentFormDto.getId()).orElseThrow(EntityNotFoundException::new);
-        comment.updateComment(commentFormDto);
+        comment.updateComment(commentFormDto.getCommentContent());
 
     }
 

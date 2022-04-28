@@ -44,7 +44,7 @@ class MemberTest {
         memberFormDto.setPassword("123123");
 
         //when
-        final Member member = Member.createMember(memberFormDto, passwordEncoder);
+        Member member = Member.createMember(memberFormDto.getName(), memberFormDto.getEmail(), memberFormDto.getAddress(), memberFormDto.getPassword(), passwordEncoder);
 
         //then
         Assertions.assertThat(member.getRole()).isEqualTo(Role.USER);

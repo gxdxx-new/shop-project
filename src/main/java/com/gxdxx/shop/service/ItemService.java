@@ -52,7 +52,13 @@ public class ItemService {
         List<ItemImg> itemImgList = itemImgRepository.findByItemIdOrderByIdAsc(itemId);
         List<ItemImgDto> itemImgDtoList = new ArrayList<>();
         for (ItemImg itemImg : itemImgList) {
-            ItemImgDto itemImgDto = ItemImgDto.of(itemImg);
+            ItemImgDto itemImgDto = ItemImgDto.builder()
+                    .id(itemImg.getId())
+                    .imgName(itemImg.getImgName())
+                    .oriImgName(itemImg.getOriImgName())
+                    .imgUrl(itemImg.getImgUrl())
+                    .repImgYn(itemImg.getRepImgYn())
+                    .build();
             itemImgDtoList.add(itemImgDto);
         }
 
@@ -73,7 +79,7 @@ public class ItemService {
 
         //상품 수정
         Item item = itemRepository.findById(itemFormDto.getId()).orElseThrow(EntityNotFoundException::new);
-        item.updateItem(itemFormDto);
+        item.updateItem(itemFormDto.getItemName(), itemFormDto.getPrice(), itemFormDto.getStockQuantity(), itemFormDto.getItemDescription(), itemFormDto.getItemSellStatus());
 
         List<Long> itemImgIds = itemFormDto.getItemImgIds();
 

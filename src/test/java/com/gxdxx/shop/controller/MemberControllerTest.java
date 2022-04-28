@@ -31,14 +31,13 @@ public class MemberControllerTest {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public Member createMember(String email, String password) {
+    public MemberFormDto createMember(String email, String password) {
         MemberFormDto memberFormDto = new MemberFormDto();
         memberFormDto.setEmail(email);
         memberFormDto.setName("홍길동");
         memberFormDto.setAddress("경북 경산시 대동");
         memberFormDto.setPassword(password);
-        Member member = Member.createMember(memberFormDto, passwordEncoder);
-        return memberService.saveMember(member);
+        return memberFormDto;
     }
 
     @Test
@@ -46,7 +45,9 @@ public class MemberControllerTest {
     public void loginSuccessTest() throws Exception {
         String email = "test@email.com";
         String password = "1234";
-        this.createMember(email, password);
+        MemberFormDto memberFormDto = this.createMember(email, password);
+        Member member = Member.createMember(memberFormDto.getName(), memberFormDto.getEmail(), memberFormDto.getAddress(), memberFormDto.getPassword(), passwordEncoder);
+        Member savedMember = memberService.saveMember(member);
 
         mockMvc.perform(formLogin().userParameter("email")
                 .loginProcessingUrl("/members/login")

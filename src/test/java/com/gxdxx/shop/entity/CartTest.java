@@ -34,19 +34,20 @@ class CartTest {
     @PersistenceContext
     EntityManager em;
 
-    public Member createMember() {
+    public MemberFormDto createMember() {
         MemberFormDto memberFormDto = new MemberFormDto();
         memberFormDto.setEmail("test@email.com");
         memberFormDto.setName("홍길동");
         memberFormDto.setAddress("경북 경산시 대동");
         memberFormDto.setPassword("1234");
-        return Member.createMember(memberFormDto, passwordEncoder);
+        return memberFormDto;
     }
 
     @Test
     @DisplayName("장바구니 회원 엔티티 매핑 조회 테스트")
     public void findCartAndMemberTest() {
-        Member member = createMember();
+        MemberFormDto memberFormDto = this.createMember();
+        Member member = Member.createMember(memberFormDto.getName(), memberFormDto.getEmail(), memberFormDto.getAddress(), memberFormDto.getPassword(), passwordEncoder);
         memberRepository.save(member);
 
         Cart cart = Cart.createCart(member);

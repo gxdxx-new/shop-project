@@ -32,9 +32,9 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    public static Comment createComment(Member member, Board board, CommentFormDto commentFormDto) {
+    public static Comment createComment(Member member, Board board, String commentContent) {
         Comment comment = new Comment();
-        comment.commentContent = commentFormDto.getCommentContent();
+        comment.commentContent = commentContent;
         comment.status = 1;
         comment.member = member;
         comment.board = board;
@@ -42,8 +42,8 @@ public class Comment extends BaseEntity {
         return comment;
     }
 
-    public void updateComment(CommentFormDto commentFormDto) {
-        this.commentContent = commentFormDto.getCommentContent();
+    public void updateComment(String commentContent) {
+        this.commentContent = commentContent;
         this.status = 1;
     }
 

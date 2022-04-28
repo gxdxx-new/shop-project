@@ -44,12 +44,12 @@ public class Item extends BaseEntity {
     }
 
 
-    public void updateItem(ItemFormDto itemFormDto) {
-        this.itemName = itemFormDto.getItemName();
-        this.price = itemFormDto.getPrice();
-        this.stockQuantity = itemFormDto.getStockQuantity();
-        this.itemDescription = itemFormDto.getItemDescription();
-        this.itemSellStatus = itemFormDto.getItemSellStatus();
+    public void updateItem(String itemName, int price, int stockQuantity, String itemDescription, ItemSellStatus itemSellStatus) {
+        this.itemName = itemName;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+        this.itemDescription = itemDescription;
+        this.itemSellStatus = itemSellStatus;
     }
 
     public void removeStock(int stockQuantity) {
