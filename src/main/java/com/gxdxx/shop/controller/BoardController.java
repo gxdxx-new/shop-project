@@ -2,6 +2,7 @@ package com.gxdxx.shop.controller;
 
 import com.gxdxx.shop.dto.*;
 import com.gxdxx.shop.service.BoardService;
+import com.gxdxx.shop.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +25,7 @@ import java.util.Optional;
 public class BoardController {
 
     private final BoardService boardService;
+    private final CommentService commentService;
 
     @GetMapping(value = "/board/new")   // 게시글 form
     public String boardForm(Model model) {
@@ -94,7 +96,7 @@ public class BoardController {
         boardService.hitsCount(boardId);
 
         BoardDetailDto boardDetailDto = boardService.getBoardDetail(boardId);
-        List<CommentFormDto> commentFormDtos = boardService.getComments(boardId);
+        List<CommentFormDto> commentFormDtos = commentService.getComments(boardId);
 
         model.addAttribute("board", boardDetailDto);
         model.addAttribute("comments", commentFormDtos);
@@ -125,77 +127,6 @@ public class BoardController {
         model.addAttribute("maxPage", 5);
 
         return "board/boardList";
-    }
-
-    @PostMapping(value = "/board/{boardId}/comment")  // 댓글쓰기
-    public @ResponseBody ResponseEntity commentNew(@Valid @RequestBody CommentFormDto commentFormDto, BindingResult bindingResult,
-                           @PathVariable("boardId") Long boardId, Principal principal) {
-
-        if (bindingResult.hasErrors()) {    // 필수값이 들어있는지 검사
-            return new ResponseEntity<String>("댓글을 50자 이내로 입력해주세요.", HttpStatus.FORBIDDEN);
-        }
-
-        String email = principal.getName();
-
-        try {
-            System.out.println(boardService.saveComment(email, boardId, commentFormDto));
-        } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-
-
-        return new ResponseEntity<Long>(boardId, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/board/{boardId}/comment/{commentId}")  // 댓글수정
-    public @ResponseBody ResponseEntity updateComment(@PathVariable("boardId") Long boardId, @PathVariable("commentId") Long commentId, Principal principal) {
-
-        if (!boardService.validateComment(commentId, principal.getName())) {
-            return new ResponseEntity<String>("수정 권한이 없습니다.", HttpStatus.FORBIDDEN);
-        }
-
-        try {
-            boardService.updateCommentView(commentId);
-        } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-
-
-        return new ResponseEntity<Long>(boardId, HttpStatus.OK);
-    }
-
-    @PostMapping(value = "/board/{boardId}/comment/{commentId}")  // 댓글수정
-    public @ResponseBody ResponseEntity updateComment(@Valid @RequestBody CommentFormDto commentFormDto, BindingResult bindingResult,
-                                                   @PathVariable("boardId") Long boardId, @PathVariable("commentId") Long commentId, Principal principal) {
-
-        if (bindingResult.hasErrors()) {    // 필수값이 들어있는지 검사
-            return new ResponseEntity<String>("댓글을 50자 이내로 입력해주세요.", HttpStatus.FORBIDDEN);
-        }
-
-        if (!boardService.validateComment(commentId, principal.getName())) {
-            return new ResponseEntity<String>("수정 권한이 없습니다.", HttpStatus.FORBIDDEN);
-        }
-
-        try {
-            boardService.updateComment(commentFormDto);
-        } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-
-
-        return new ResponseEntity<Long>(boardId, HttpStatus.OK);
-    }
-
-    @DeleteMapping(value = "/board/{boardId}/comment/{commentId}")  // 댓글 삭제
-    public @ResponseBody ResponseEntity deleteComment(
-            @PathVariable("boardId") Long boardId, @PathVariable("commentId") Long commentId, Principal principal) {
-
-        if (!boardService.validateComment(commentId, principal.getName())) {
-            return new ResponseEntity<String>("삭제 권한이 없습니다.", HttpStatus.FORBIDDEN);
-        }
-
-        boardService.deleteComment(boardId, commentId);
-        return new ResponseEntity<Long>(boardId, HttpStatus.OK);
     }
 
 }
