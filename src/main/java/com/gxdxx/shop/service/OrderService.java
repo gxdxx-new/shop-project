@@ -4,6 +4,9 @@ import com.gxdxx.shop.dto.OrderDto;
 import com.gxdxx.shop.dto.OrderHistoryDto;
 import com.gxdxx.shop.dto.OrderItemDto;
 import com.gxdxx.shop.entity.*;
+import com.gxdxx.shop.exception.ItemAjaxNotFoundException;
+import com.gxdxx.shop.exception.ItemNotFoundException;
+import com.gxdxx.shop.exception.OrderNotFoundException;
 import com.gxdxx.shop.repository.ItemImgRepository;
 import com.gxdxx.shop.repository.ItemRepository;
 import com.gxdxx.shop.repository.MemberRepository;
@@ -31,7 +34,7 @@ public class OrderService {
     private final ItemImgRepository itemImgRepository;
 
     public Long order(OrderDto orderDto, String email) {
-        Item item = itemRepository.findById(orderDto.getItemId()).orElseThrow(EntityNotFoundException::new);
+        Item item = itemRepository.findById(orderDto.getItemId()).orElseThrow(ItemAjaxNotFoundException::new);
         Member member = memberRepository.findByEmail(email);
 
         List<OrderItem> orderItemList = new ArrayList<>();
@@ -70,7 +73,7 @@ public class OrderService {
     @Transactional(readOnly = true)
     public boolean validateOrder(Long orderId, String email) {
         Member currentMember = memberRepository.findByEmail(email);
-        Order order = orderRepository.findById(orderId).orElseThrow(EntityNotFoundException::new);
+        Order order = orderRepository.findById(orderId).orElseThrow(OrderNotFoundException::new);
         Member savedMember = order.getMember();
 
         if (!StringUtils.equals(currentMember.getEmail(), savedMember.getEmail())) {
@@ -81,7 +84,7 @@ public class OrderService {
     }
 
     public void cancelOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(EntityNotFoundException::new);
+        Order order = orderRepository.findById(orderId).orElseThrow(OrderNotFoundException::new);
         order.cancelOrder();
     }
 
@@ -91,7 +94,7 @@ public class OrderService {
         List<OrderItem> orderItemList = new ArrayList<>();
 
         for (OrderDto orderDto : orderDtoList) {
-            Item item = itemRepository.findById(orderDto.getItemId()).orElseThrow(EntityNotFoundException::new);
+            Item item = itemRepository.findById(orderDto.getItemId()).orElseThrow(ItemAjaxNotFoundException::new);
 
             OrderItem orderItem = OrderItem.createOrderItem(item, orderDto.getCount());
             orderItemList.add(orderItem);

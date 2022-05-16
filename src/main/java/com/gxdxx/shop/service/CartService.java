@@ -8,6 +8,9 @@ import com.gxdxx.shop.entity.Cart;
 import com.gxdxx.shop.entity.CartItem;
 import com.gxdxx.shop.entity.Item;
 import com.gxdxx.shop.entity.Member;
+import com.gxdxx.shop.exception.CartItemNotFoundException;
+import com.gxdxx.shop.exception.ItemAjaxNotFoundException;
+import com.gxdxx.shop.exception.ItemNotFoundException;
 import com.gxdxx.shop.repository.CartItemRepository;
 import com.gxdxx.shop.repository.CartRepository;
 import com.gxdxx.shop.repository.ItemRepository;
@@ -33,7 +36,7 @@ public class CartService {
     private final OrderService orderService;
 
     public Long addCart(CartItemDto cartItemDto,String email) {
-        Item item = itemRepository.findById(cartItemDto.getItemId()).orElseThrow(EntityNotFoundException::new);
+        Item item = itemRepository.findById(cartItemDto.getItemId()).orElseThrow(ItemAjaxNotFoundException::new);
         Member member = memberRepository.findByEmail(email);
 
         Cart cart = cartRepository.findByMemberId(member.getId());
@@ -72,7 +75,7 @@ public class CartService {
     @Transactional(readOnly = true)
     public boolean validateCartItem(Long cartItemId, String email) {
         Member currentMember = memberRepository.findByEmail(email);
-        CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(EntityNotFoundException::new);
+        CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(CartItemNotFoundException::new);
         Member savedMember = cartItem.getCart().getMember();
 
         if (!StringUtils.equals(currentMember.getEmail(), savedMember.getEmail())) {
@@ -83,13 +86,13 @@ public class CartService {
     }
 
     public void updateCartItemCount(Long cartItemId, int count) {
-        CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(EntityNotFoundException::new);
+        CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(CartItemNotFoundException::new);
 
         cartItem.updateCount(count);
     }
 
     public void deleteCartItem(Long cartItemId) {
-        CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(EntityNotFoundException::new);
+        CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(CartItemNotFoundException::new);
         cartItemRepository.delete(cartItem);
     }
 
@@ -98,7 +101,7 @@ public class CartService {
         for (CartOrderDto cartOrderDto : cartOrderDtoList) {
             CartItem cartItem = cartItemRepository
                     .findById(cartOrderDto.getCartItemId())
-                    .orElseThrow(EntityNotFoundException::new);
+                    .orElseThrow(CartItemNotFoundException::new);
 
             OrderDto orderDto = OrderDto.builder()
                     .itemId(cartItem.getItem().getId())
@@ -113,7 +116,7 @@ public class CartService {
         for (CartOrderDto cartOrderDto : cartOrderDtoList) {
             CartItem cartItem = cartItemRepository
                     .findById(cartOrderDto.getCartItemId())
-                    .orElseThrow(EntityNotFoundException::new);
+                    .orElseThrow(CartItemNotFoundException::new);
             cartItemRepository.delete(cartItem);
         }
 

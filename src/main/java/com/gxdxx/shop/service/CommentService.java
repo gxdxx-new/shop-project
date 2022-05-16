@@ -4,6 +4,9 @@ import com.gxdxx.shop.dto.CommentFormDto;
 import com.gxdxx.shop.entity.Board;
 import com.gxdxx.shop.entity.Comment;
 import com.gxdxx.shop.entity.Member;
+import com.gxdxx.shop.exception.BoardAjaxNotFoundException;
+import com.gxdxx.shop.exception.BoardNotFoundException;
+import com.gxdxx.shop.exception.CommentNotFoundException;
 import com.gxdxx.shop.repository.BoardRepository;
 import com.gxdxx.shop.repository.CommentRepository;
 import com.gxdxx.shop.repository.MemberRepository;
@@ -12,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.StringUtils;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,10 +27,10 @@ public class CommentService {
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
 
-    public Long saveComment(String email, Long boardId, CommentFormDto commentFormDto) throws Exception {
+    public Long saveComment(String email, Long boardId, CommentFormDto commentFormDto) {
 
         Member member = memberRepository.findByEmail(email);
-        Board board = boardRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
+        Board board = boardRepository.findById(boardId).orElseThrow(BoardAjaxNotFoundException::new);
 
         Comment comment = Comment.createComment(member, board, commentFormDto.getCommentContent());
         commentRepository.save(comment);
@@ -39,7 +41,7 @@ public class CommentService {
     @Transactional(readOnly = true)
     public List<CommentFormDto> getComments(Long boardId) {
 
-        Board board = boardRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
+        Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
 
         List<CommentFormDto> commentFormDtos = new ArrayList<>();
 
@@ -61,7 +63,7 @@ public class CommentService {
     @Transactional(readOnly = true)
     public int getCommentsCount(Long boardId) {
 
-        Board board = boardRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
+        Board board = boardRepository.findById(boardId).orElseThrow(BoardAjaxNotFoundException::new);
 
         return board.getComments().size();
     }
@@ -69,7 +71,7 @@ public class CommentService {
     @Transactional(readOnly = true)
     public boolean validateComment(Long commentId, String email) {
         Member currentMember = memberRepository.findByEmail(email);
-        Comment comment = commentRepository.findById(commentId).orElseThrow(EntityNotFoundException::new);
+        Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
         Member savedMember = comment.getMember();
 
         if (!StringUtils.equals(currentMember.getEmail(), savedMember.getEmail())) {
@@ -79,24 +81,24 @@ public class CommentService {
         return true;
     }
 
-    public void updateCommentView(Long commentId) throws Exception {
+    public void updateCommentView(Long commentId) {
 
         //댓글 수정
-        Comment comment = commentRepository.findById(commentId).orElseThrow(EntityNotFoundException::new);
+        Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
         comment.changeStatus();
 
     }
 
-    public void updateComment(CommentFormDto commentFormDto) throws Exception {
+    public void updateComment(CommentFormDto commentFormDto) {
 
-        Comment comment = commentRepository.findById(commentFormDto.getId()).orElseThrow(EntityNotFoundException::new);
+        Comment comment = commentRepository.findById(commentFormDto.getId()).orElseThrow(CommentNotFoundException::new);
         comment.updateComment(commentFormDto.getCommentContent());
 
     }
 
     public void deleteComment(Long boardId, Long commentId) {
-        Board board = boardRepository.findById(boardId).orElseThrow(EntityNotFoundException::new);
-        Comment comment = commentRepository.findById(commentId).orElseThrow(EntityNotFoundException::new);
+        Board board = boardRepository.findById(boardId).orElseThrow(BoardAjaxNotFoundException::new);
+        Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
 
         // 게시글에서도 삭제하고, 댓글에서도 삭제
         for (Comment findComment : board.getComments()) {

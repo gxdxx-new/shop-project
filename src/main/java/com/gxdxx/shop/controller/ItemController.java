@@ -4,6 +4,7 @@ import com.gxdxx.shop.dto.ItemFormDto;
 import com.gxdxx.shop.dto.ItemListDto;
 import com.gxdxx.shop.dto.ItemSearchDto;
 import com.gxdxx.shop.entity.Item;
+import com.gxdxx.shop.exception.ItemNotFoundException;
 import com.gxdxx.shop.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -61,14 +62,8 @@ public class ItemController {
     @GetMapping(value = "/admin/item/{itemId}")
     public String itemDtl(@PathVariable("itemId") Long itemId, Model model) {
 
-        try {
-            ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
-            model.addAttribute("itemFormDto", itemFormDto);
-        } catch (EntityNotFoundException e) {
-            model.addAttribute("errorMessage", "존재하지 않는 상품입니다.");
-            model.addAttribute("itemFormDto", new ItemFormDto());
-            return "item/itemForm";
-        }
+        ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
+        model.addAttribute("itemFormDto", itemFormDto);
 
         return"item/itemForm";
     }

@@ -1,6 +1,7 @@
 package com.gxdxx.shop.service;
 
 import com.gxdxx.shop.entity.Member;
+import com.gxdxx.shop.exception.MemberEmailAlreadyExistsException;
 import com.gxdxx.shop.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
@@ -26,7 +27,7 @@ public class MemberService implements UserDetailsService {
     private void validateDuplicateMember(Member member) {
         Member findMember = memberRepository.findByEmail(member.getEmail());
         if (findMember != null) {
-            throw new IllegalStateException("이미 가입된 회원입니다.");
+            throw new MemberEmailAlreadyExistsException(findMember.getEmail());
         }
     }
 

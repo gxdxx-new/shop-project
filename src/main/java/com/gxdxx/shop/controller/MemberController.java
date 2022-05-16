@@ -29,19 +29,14 @@ public class MemberController {
     }
 
     @PostMapping(value = "/new")
-    public String memberForm(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model) {
+    public String memberForm(@Valid MemberFormDto memberFormDto, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return "member/memberForm";
         }
 
-        try {
-            Member member = Member.createMember(memberFormDto.getName(), memberFormDto.getEmail(), memberFormDto.getAddress(), memberFormDto.getPassword(), passwordEncoder);
-            memberService.saveMember(member);
-        } catch (IllegalStateException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            return "member/memberForm";
-        }
+        Member member = Member.createMember(memberFormDto.getName(), memberFormDto.getEmail(), memberFormDto.getAddress(), memberFormDto.getPassword(), passwordEncoder);
+        memberService.saveMember(member);
 
         return "redirect:/";
     }

@@ -25,7 +25,6 @@ public class FileService {
     public void deleteFile(String filePath) throws Exception {
         File deleteFile = new File(filePath);
 
-
         if (deleteFile.exists()) {
             deleteFile.delete();
             log.info("파일을 삭제하였습니다.");

@@ -14,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
@@ -42,14 +41,7 @@ public class BoardController {
         }
 
         String email = principal.getName();
-        Long boardId;
-
-        try {
-            boardId = boardService.saveBoard(email, boardFormDto);
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", "글작성 중 에러가 발생했습니다.");
-            return "board/boardForm";
-        }
+        boardService.saveBoard(email, boardFormDto);
 
         return "redirect:/boards";
     }
@@ -61,31 +53,20 @@ public class BoardController {
             return "redirect:/boards";
         }
 
-        try {
-            BoardFormDto boardFormDto = boardService.getBoardForm(boardId);
-            model.addAttribute("boardFormDto", boardFormDto);
-        } catch (EntityNotFoundException e) {
-            model.addAttribute("errorMessage", "존재하지 않는 게시글입니다.");
-            model.addAttribute("boardFormDto", new BoardFormDto());
-            return "board/boardForm";
-        }
+        BoardFormDto boardFormDto = boardService.getBoardForm(boardId);
+        model.addAttribute("boardFormDto", boardFormDto);
 
         return "board/boardForm";
     }
 
     @PostMapping(value = "/board/{boardId}")    // 글 수정
-    public String boardUpdate(@Valid BoardFormDto boardFormDto, BindingResult bindingResult, Model model) {
+    public String boardUpdate(@Valid BoardFormDto boardFormDto, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return "board/boardForm";
         }
 
-        try {
-            boardService.updateBoard(boardFormDto);
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", "게시글 수정 중 에러가 발생했습니다.");
-            return "board/boardForm";
-        }
+        boardService.updateBoard(boardFormDto);
 
         return "redirect:/board/{boardId}";
     }

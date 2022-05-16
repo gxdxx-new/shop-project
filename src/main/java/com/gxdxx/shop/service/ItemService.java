@@ -3,6 +3,7 @@ package com.gxdxx.shop.service;
 import com.gxdxx.shop.dto.*;
 import com.gxdxx.shop.entity.Item;
 import com.gxdxx.shop.entity.ItemImg;
+import com.gxdxx.shop.exception.ItemNotFoundException;
 import com.gxdxx.shop.repository.ItemImgRepository;
 import com.gxdxx.shop.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,15 @@ public class ItemService {
     @Transactional(readOnly = true)
     public ItemFormDto getItemDtl(Long itemId) {
 
+        Item item = itemRepository.findById(itemId).orElseThrow(ItemNotFoundException::new);
+        ItemFormDto itemFormDto = ItemFormDto.builder()
+                .id(item.getId())
+                .itemName(item.getItemName())
+                .itemDescription(item.getItemDescription())
+                .price(item.getPrice())
+                .itemSellStatus(item.getItemSellStatus())
+                .build();
+
         List<ItemImg> itemImgList = itemImgRepository.findByItemIdOrderByIdAsc(itemId);
         List<ItemImgDto> itemImgDtoList = new ArrayList<>();
         for (ItemImg itemImg : itemImgList) {
@@ -61,15 +71,6 @@ public class ItemService {
                     .build();
             itemImgDtoList.add(itemImgDto);
         }
-
-        Item item = itemRepository.findById(itemId).orElseThrow(EntityNotFoundException::new);
-        ItemFormDto itemFormDto = ItemFormDto.builder()
-                .id(item.getId())
-                .itemName(item.getItemName())
-                .itemDescription(item.getItemDescription())
-                .price(item.getPrice())
-                .itemSellStatus(item.getItemSellStatus())
-                .build();
         itemFormDto.setItemImgDtoList(itemImgDtoList);
 
         return itemFormDto;
@@ -78,7 +79,7 @@ public class ItemService {
     public Long updateItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList) throws Exception {
 
         //상품 수정
-        Item item = itemRepository.findById(itemFormDto.getId()).orElseThrow(EntityNotFoundException::new);
+        Item item = itemRepository.findById(itemFormDto.getId()).orElseThrow(ItemNotFoundException::new);
         item.updateItem(itemFormDto.getItemName(), itemFormDto.getPrice(), itemFormDto.getStockQuantity(), itemFormDto.getItemDescription(), itemFormDto.getItemSellStatus());
 
         List<Long> itemImgIds = itemFormDto.getItemImgIds();

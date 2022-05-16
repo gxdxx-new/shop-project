@@ -1,6 +1,7 @@
 package com.gxdxx.shop.service;
 
 import com.gxdxx.shop.entity.ItemImg;
+import com.gxdxx.shop.exception.ItemImgNotFoundException;
 import com.gxdxx.shop.repository.ItemImgRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,7 +42,7 @@ public class ItemImgService {
 
     public void updateItemImg(Long itemImgId, MultipartFile itemImgFile) throws Exception {
         if (!itemImgFile.isEmpty()) {
-            ItemImg savedItemImg = itemImgRepository.findById(itemImgId).orElseThrow(EntityNotFoundException::new);
+            ItemImg savedItemImg = itemImgRepository.findById(itemImgId).orElseThrow(ItemImgNotFoundException::new);
 
             //기존 이미지 파일 삭제
             if (!StringUtils.isEmpty(savedItemImg.getImgName())) {

@@ -28,13 +28,7 @@ public class CommentController {
         }
 
         String email = principal.getName();
-
-        try {
-            System.out.println(commentService.saveComment(email, boardId, commentFormDto));
-        } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-
+        commentService.saveComment(email, boardId, commentFormDto);
 
         return new ResponseEntity<Long>(boardId, HttpStatus.OK);
     }
@@ -46,12 +40,7 @@ public class CommentController {
             return new ResponseEntity<String>("수정 권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
 
-        try {
-            commentService.updateCommentView(commentId);
-        } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-
+        commentService.updateCommentView(commentId);
 
         return new ResponseEntity<Long>(boardId, HttpStatus.OK);
     }
@@ -68,12 +57,7 @@ public class CommentController {
             return new ResponseEntity<String>("수정 권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
 
-        try {
-            commentService.updateComment(commentFormDto);
-        } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-
+        commentService.updateComment(commentFormDto);
 
         return new ResponseEntity<Long>(boardId, HttpStatus.OK);
     }
