@@ -19,6 +19,12 @@
                 <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                     <a class="nav-link" href="/admin/items">상품 관리</a>
                 </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                    <a class="nav-link" href="/admin/coupon/new">쿠폰 등록</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                    <a class="nav-link" href="/admin/coupons">쿠폰 관리</a>
+                </li>
                 <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_USER')">
                     <a class="nav-link" href="/cart">장바구니</a>
                 </li>

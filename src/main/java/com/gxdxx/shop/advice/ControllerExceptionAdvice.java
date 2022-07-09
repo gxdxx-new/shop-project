@@ -83,6 +83,12 @@ public class ControllerExceptionAdvice {
         return "item/itemManagement";
     }
 
+    @ExceptionHandler(CouponNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String couponNotFoundException(Model model) {
+        model.addAttribute("errorMessage", "존재하지 않는 쿠폰입니다.");
+        return "coupon/couponManagement";
+    }
 
     @ExceptionHandler({EventException.class, RuntimeException.class})
     public String eventErrorHandler(RuntimeException exception, Model model){
